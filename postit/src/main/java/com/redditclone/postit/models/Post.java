@@ -16,9 +16,7 @@ public class Post {
     private Long postId;
     private String postName;
     private String url;
-    @Lob // store as large object (to increase efficiency)
-    // can be used with any serializable data type
-    // use columnDefinition with @Column annotation to specify how it is stored, e.g. BLOB for binary large object
+    @Lob
     private String description;
     private Integer voteCount = 0;
     @ManyToOne(fetch = FetchType.LAZY)
