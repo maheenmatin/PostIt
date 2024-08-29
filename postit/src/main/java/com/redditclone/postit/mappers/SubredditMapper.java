@@ -6,7 +6,6 @@ import com.redditclone.postit.models.Subreddit;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")

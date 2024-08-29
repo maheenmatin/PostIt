@@ -11,11 +11,14 @@ import com.redditclone.postit.repositories.UserRepository;
 import com.redditclone.postit.repositories.VerificationTokenRepository;
 import com.redditclone.postit.security.JwtProvider;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
@@ -90,5 +93,18 @@ public class AuthService {
 
         String token = jwtProvider.generateToken(authenticate);
         return new AuthenticationResponse(token, loginRequest.getUsername());
+    }
+
+    @Transactional(readOnly = true)
+    public User getCurrentUser() {
+        Jwt principal = (Jwt) SecurityContextHolder.
+                getContext().getAuthentication().getPrincipal();
+        return userRepository.findByUsername(principal.getSubject())
+                .orElseThrow(() -> new UsernameNotFoundException("User name not found - " + principal.getSubject()));
+    }
+
+    public boolean isLoggedIn() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated();
     }
 }
