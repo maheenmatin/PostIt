@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -30,11 +32,11 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
-//TODO: is @EnableWebSecurity no longer necessary?
 @RequiredArgsConstructor
 public class SecurityConfig {
-    //TODO: may need to autowire UserDetailsServiceImpl here, i.e. declare it as a field
-    // might be why web request with invalid JWT returns error 401 instead of error 500
+    @Autowired
+    UserDetailsService userDetailsService;
+
     @Value("${jwt.public.key}") // defined in application.properties
     RSAPublicKey publicKey;
 
@@ -62,11 +64,11 @@ public class SecurityConfig {
                         .permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/posts/**")
                         .permitAll()
-                        .requestMatchers("/v2/api-docs",
+                        .requestMatchers("/v3/api-docs/**",
                                 "/configuration/ui",
                                 "/swagger-resources/**",
                                 "/configuration/security",
-                                "/swagger-ui.html",
+                                "/swagger-ui/**",
                                 "/webjars/**")
                         .permitAll()
                         // authenticate all other requests, then permit
