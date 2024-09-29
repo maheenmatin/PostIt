@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { SignupRequestPayload } from "../signup/signup-request.payload";
-import { map, Observable, tap } from "rxjs";
+import { map, Observable, tap, throwError } from "rxjs";
 import { LocalStorageService } from "ngx-webstorage";
 import { LoginRequestPayload } from "../login/login-request.payload";
 import { LoginResponse } from "../login/login-response.payload";
@@ -32,6 +32,23 @@ export class AuthService {
         return true;
       })
     );
+  }
+
+  logout() {
+    this.httpClient
+      .post("http://localhost:8080/api/auth/logout", this.createRefreshTokenPayload, { responseType: "text" })
+      .subscribe(
+        (data) => {
+          console.log(data);
+        },
+        (error) => {
+          throwError(error);
+        }
+      );
+    this.localStorage.clear("authenticationToken");
+    this.localStorage.clear("username");
+    this.localStorage.clear("refreshToken");
+    this.localStorage.clear("expiresAt");
   }
 
   refreshToken() {
