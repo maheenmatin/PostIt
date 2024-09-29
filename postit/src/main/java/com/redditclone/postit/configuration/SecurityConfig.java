@@ -45,7 +45,7 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
+        throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
@@ -54,33 +54,33 @@ public class SecurityConfig {
         //TODO: consider the following piece of code for csrf disabling
         // .csrf(csrf -> csrf.disable())
         return httpSecurity.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        // allow all incoming requests to the backend API (that match the patterns)
-                        .requestMatchers("/api/auth/**")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/subreddit")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/")
-                        .permitAll()
-                        .requestMatchers(HttpMethod.GET, "/api/posts/**")
-                        .permitAll()
-                        .requestMatchers("/v3/api-docs/**",
-                                "/configuration/ui",
-                                "/swagger-resources/**",
-                                "/configuration/security",
-                                "/swagger-ui/**",
-                                "/webjars/**")
-                        .permitAll()
-                        // authenticate all other requests, then permit
-                        .anyRequest()
-                        .authenticated())
-                // TODO: replace deprecated code
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exceptions -> exceptions
-                        .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
-                        .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
-                .build();
+            .authorizeHttpRequests(authorize -> authorize
+                // allow all incoming requests to the backend API (that match the patterns)
+                .requestMatchers("/api/auth/**")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/subreddit")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/posts/")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/posts/**")
+                .permitAll()
+                .requestMatchers("/v3/api-docs/**",
+                    "/configuration/ui",
+                    "/swagger-resources/**",
+                    "/configuration/security",
+                    "/swagger-ui/**",
+                    "/webjars/**")
+                .permitAll()
+                // authenticate all other requests, then permit
+                .anyRequest()
+                .authenticated())
+            // TODO: replace deprecated code
+            .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .exceptionHandling(exceptions -> exceptions
+                .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
+            .build();
     }
 
     @Bean
