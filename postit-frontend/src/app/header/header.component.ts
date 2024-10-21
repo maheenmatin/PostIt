@@ -4,6 +4,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { AuthService } from "../auth/shared/auth.service";
 import { CommonModule } from "@angular/common";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { SubredditService } from "../subreddit/subreddit.service";
 
 @Component({
   selector: "app-header",
@@ -14,10 +15,10 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 })
 export class HeaderComponent {
   faUser = faUser;
-  isLoggedIn!: boolean;
-  username!: string;
+  isLoggedIn: boolean = false;
+  username: string = "";
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private subredditService: SubredditService) {}
 
   ngOnInit() {
     this.authService.loggedIn.subscribe((data: boolean) => (this.isLoggedIn = data));
@@ -34,5 +35,9 @@ export class HeaderComponent {
     this.authService.logout();
     this.isLoggedIn = false;
     this.router.navigateByUrl("");
+  }
+
+  filterSubreddit(): void {
+    this.subredditService.setSelectedSubreddit(undefined);
   }
 }

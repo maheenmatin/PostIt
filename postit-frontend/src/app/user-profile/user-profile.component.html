@@ -1,15 +1,15 @@
 <div class="container">
   <div>
     Welcome <b>{{ name }}</b
-    >.<br />
+    >!<br />
     You have posted <b>{{ postLength }}</b> time(s) and commented <b>{{ commentLength }}</b> time(s). You can check your
-    post and comment history below.
+    post and comment history below...
   </div>
   <hr />
-  <div>Your Posts:</div>
-  <app-post-tile [posts]="posts"></app-post-tile>
+  <div class="fs-3">Your Posts</div>
+  <app-post-tile></app-post-tile>
   <hr />
-  <div>Your Comments:</div>
+  <div class="fs-3 mb-3">Your Comments</div>
   <div *ngFor="let comment of comments">
     <div class="comment">
       <div class="username">

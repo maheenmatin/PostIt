@@ -2,10 +2,10 @@
     <div style="color: black; font-weight: bold">Browse Subreddits</div>
     <hr />
     <span *ngFor="let subreddit of subreddits">
-        <span class="subreddit-text"><a href="/view-subreddit/{{subreddit.id}}">{{subreddit.name}}</a></span>
+        <span class="subreddit-text"><a href="/" (click)="filterSubreddit(subreddit.name)">{{subreddit.name}}</a></span>
         <hr />
     </span>
     <div style="text-align: center" *ngIf="displayViewAll">
-        <a style="font-weight: bold" routerLink="/list-subreddits">View All</a>
+        <a style="font-weight: bold" routerLink="/list-subreddits">View all</a>
     </div>
 </div>

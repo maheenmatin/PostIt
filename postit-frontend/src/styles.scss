@@ -1,3 +1,12 @@
+// Bootstrap overrides
+$body-bg: #1e1e1e;
+$body-color: #ffffff;
+$dropdown-link-color: #1e1e1e;
+
+@import "../node_modules/bootstrap/scss/bootstrap.scss";
+
+
+// Other
 html {
   padding: 0;
   height: 100%;
