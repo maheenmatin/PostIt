@@ -52,6 +52,11 @@ export class VoteButtonComponent {
   }
 
   private vote() {
+    if (!this.isLoggedIn) {
+      this.toastr.error("Login to vote!");
+      return;
+    }
+    
     this.voteService.vote(this.createVotePayload()).subscribe(
       () => {
         this.updateVoteDetails();

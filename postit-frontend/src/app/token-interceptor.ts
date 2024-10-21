@@ -5,7 +5,6 @@ import { AuthService } from "./auth/shared/auth.service";
 import { inject } from "@angular/core";
 import { LoginResponse } from "./auth/login/login-response.payload";
 
-// Functional interceptor
 export const TokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<any> => {
   const authService = inject(AuthService);
   const isTokenRefreshing = new BehaviorSubject<boolean>(false);

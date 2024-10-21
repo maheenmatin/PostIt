@@ -24,4 +24,10 @@ export class ListSubredditsComponent implements OnInit {
       throwError(error);
     })
   }
+
+  filterSubreddit(name: string | undefined): void {
+    if (name) {
+      this.subredditService.setSelectedSubreddit(name);
+    }
+  }
 }

@@ -20,7 +20,7 @@
                   required
                   autofocus
                 />
-                <span *ngIf="!signupForm.get('email')!.valid && signupForm.get('email')!.touched">
+                <span *ngIf="!signupForm.get('email')?.valid && signupForm.get('email')?.touched">
                   Please provide a valid email
                 </span>
               </div>
@@ -30,7 +30,7 @@
               <label class="col-md-4 col-form-label text-md-right">Username</label>
               <div class="col-md-6">
                 <input type="text" [formControlName]="'username'" class="form-control" required autofocus />
-                <span *ngIf="!signupForm.get('username')!.valid && signupForm.get('username')!.touched">
+                <span *ngIf="!signupForm.get('username')?.valid && signupForm.get('username')?.touched">
                   Please provide a valid username
                 </span>
               </div>
@@ -47,7 +47,7 @@
                   name="password"
                   required
                 />
-                <span *ngIf="!signupForm.get('password')!.valid && signupForm.get('password')!.touched">
+                <span *ngIf="!signupForm.get('password')?.valid && signupForm.get('password')?.touched">
                   Please provide a valid password
                 </span>
               </div>

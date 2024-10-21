@@ -5,6 +5,7 @@ import { map, Observable, tap, throwError } from "rxjs";
 import { LocalStorageService } from "ngx-webstorage";
 import { LoginRequestPayload } from "../login/login-request.payload";
 import { LoginResponse } from "../login/login-response.payload";
+import { Router } from "@angular/router";
 
 @Injectable({
   providedIn: "root",
@@ -13,7 +14,7 @@ export class AuthService {
   @Output() loggedIn: EventEmitter<boolean> = new EventEmitter();
   @Output() username: EventEmitter<string> = new EventEmitter();
 
-  constructor(private httpClient: HttpClient, private localStorage: LocalStorageService) {}
+  constructor(private httpClient: HttpClient, private localStorage: LocalStorageService, private router: Router) {}
 
   signup(signupRequestPayload: SignupRequestPayload): Observable<any> {
     return this.httpClient.post("http://localhost:8080/api/auth/signup", signupRequestPayload, {
@@ -37,18 +38,20 @@ export class AuthService {
   logout() {
     this.httpClient
       .post("http://localhost:8080/api/auth/logout", this.createRefreshTokenPayload, { responseType: "text" })
-      .subscribe(
-        (data) => {
+      .subscribe({
+        next: (data) => {
           console.log(data);
         },
-        (error) => {
-          throwError(error);
-        }
-      );
+        error: (error) => {
+          throwError(() => new Error(error))
+        },
+      });
     this.localStorage.clear("authenticationToken");
     this.localStorage.clear("username");
     this.localStorage.clear("refreshToken");
     this.localStorage.clear("expiresAt");
+
+    this.router.navigateByUrl("").then(() => window.location.reload());
   }
 
   refreshToken() {

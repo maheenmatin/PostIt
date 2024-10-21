@@ -31,7 +31,7 @@ export class ViewPostComponent {
     private commentService: CommentService,
     private router: Router
   ) {
-    this.postId = this.activateRoute.snapshot.params["id"]; // updated syntax
+    this.postId = this.activateRoute.snapshot.params["id"];
 
     this.commentForm = new FormGroup({
       text: new FormControl("", Validators.required),
