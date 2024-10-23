@@ -29,7 +29,9 @@ export class AuthService {
         this.localStorage.store("username", data.username);
         this.localStorage.store("refreshToken", data.refreshToken);
         this.localStorage.store("expiresAt", data.expiresAt);
-
+      
+        this.localStorage.store("loggedIn", "true");
+        this.loggedIn.emit(true);
         return true;
       })
     );
@@ -50,6 +52,9 @@ export class AuthService {
     this.localStorage.clear("username");
     this.localStorage.clear("refreshToken");
     this.localStorage.clear("expiresAt");
+
+    this.localStorage.store("loggedIn", "false");
+    this.loggedIn.emit(false);
 
     this.router.navigateByUrl("").then(() => window.location.reload());
   }

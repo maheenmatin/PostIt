@@ -28,7 +28,6 @@ export class PostTileComponent {
     try {
       this.posts = await this.postService.getAllPostsAsync();
       this.filterPosts(this.subredditService.getSelectedSubreddit());
-      console.log(this.subredditService.getSelectedSubreddit());
     } catch (error) {
       console.error("Error fetching posts:", error);
     }

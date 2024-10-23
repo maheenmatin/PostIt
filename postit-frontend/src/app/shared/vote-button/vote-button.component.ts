@@ -9,6 +9,7 @@ import { throwError } from "rxjs";
 import { VoteService } from "../vote.service";
 import { VotePayload } from "./vote-payload";
 import { VoteType } from "./vote-type";
+import { LocalStorageService } from "ngx-webstorage";
 
 @Component({
   selector: "app-vote-button",
@@ -30,9 +31,13 @@ export class VoteButtonComponent {
     private voteService: VoteService,
     private authService: AuthService,
     private postService: PostService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private localStorage: LocalStorageService,
   ) {
-    this.authService.loggedIn.subscribe((data: boolean) => (this.isLoggedIn = data));
+    this.authService.loggedIn.subscribe((data: boolean) => {
+      this.isLoggedIn = data;
+      console.log(this.isLoggedIn);
+    });
   }
 
   ngOnInit(): void {
@@ -52,7 +57,7 @@ export class VoteButtonComponent {
   }
 
   private vote() {
-    if (!this.isLoggedIn) {
+    if (this.localStorage.retrieve("loggedIn") === "false" || undefined) {
       this.toastr.error("Login to vote!");
       return;
     }
