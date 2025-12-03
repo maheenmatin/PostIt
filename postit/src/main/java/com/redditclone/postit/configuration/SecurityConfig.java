@@ -28,55 +28,45 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
     @Autowired
     UserDetailsService userDetailsService;
 
-    @Value("${jwt.public.key}") // defined in application.properties
+    @Value("${jwt.public.key}")
     RSAPublicKey publicKey;
 
     @Value("${jwt.private.key}")
     RSAPrivateKey privateKey;
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-        throws Exception {
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        //TODO: consider the following piece of code for csrf disabling
-        // .csrf(csrf -> csrf.disable())
-        return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+        return httpSecurity
+            // Apply this security filter chain ONLY to /api/** endpoints
+            .securityMatcher("/api/**")
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(authorize -> authorize
-                // allow all incoming requests to the backend API (that match the patterns)
-                .requestMatchers("/api/auth/**")
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/subreddit")
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/")
-                .permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/posts/**")
-                .permitAll()
-                .requestMatchers("/v3/api-docs/**",
-                    "/configuration/ui",
-                    "/swagger-resources/**",
-                    "/configuration/security",
-                    "/swagger-ui/**",
-                    "/webjars/**")
-                .permitAll()
-                // authenticate all other requests, then permit
-                .anyRequest()
-                .authenticated())
-            // TODO: replace deprecated code
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/subreddit").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/posts/**").permitAll()
+                .anyRequest().authenticated()
+            )
             .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .sessionManagement(session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .exceptionHandling(exceptions -> exceptions
                 .authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
                 .accessDeniedHandler(new BearerTokenAccessDeniedHandler()))
@@ -88,7 +78,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // OAuth2ResourceServerConfigurer requires a JwtDecoder Bean
     @Bean
     JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withPublicKey(this.publicKey).build();
@@ -96,7 +85,6 @@ public class SecurityConfig {
 
     @Bean
     JwtEncoder jwtEncoder() {
-        // private key is used to encode/sign
         JWK jwk = new RSAKey.Builder(this.publicKey).privateKey(this.privateKey).build();
         JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
         return new NimbusJwtEncoder(jwks);
