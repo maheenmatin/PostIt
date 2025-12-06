@@ -12,13 +12,19 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "token")
+@Table
 public class VerificationToken {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+    private Long verificationId;
+
+    @Column(nullable = false, unique = true)
     private String token;
+
     @OneToOne(fetch = LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
     private User user;
-    private Instant expiryDate;
+
+    @Column(nullable = false)
+    private Instant createdDate;
 }

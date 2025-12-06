@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class OpenAPIConfig {
-    //TODO: add personal portfolio website link here
-
     @Bean
     public OpenAPI postitAPI() {
         return new OpenAPI()

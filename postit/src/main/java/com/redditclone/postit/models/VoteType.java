@@ -9,13 +9,14 @@ public enum VoteType {
     private int direction;
 
     VoteType(int direction) {
+        this.direction = direction;
     }
 
     public static VoteType lookup(Integer direction) {
         return Arrays.stream(VoteType.values())
-                .filter(value -> value.getDirection().equals(direction))
-                .findAny()
-                .orElseThrow(() -> new PostItException("Vote not found"));
+            .filter(value -> value.getDirection().equals(direction))
+            .findAny()
+            .orElseThrow(() -> new PostItException("Vote not found"));
     }
 
     public Integer getDirection() {

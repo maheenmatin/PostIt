@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class PostRequest {
     private Long postId;
-    private String subredditName;
+    private String communityName;
     @NotBlank(message = "Post name is required")
     private String postName;
     private String url;

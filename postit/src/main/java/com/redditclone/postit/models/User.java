@@ -17,9 +17,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
+
+    @Column(unique = true, nullable = false, length = 50)
     private String username;
+
+    @Column(nullable = false, length = 255)
     private String password;
+
+    @Column(unique = true, nullable = false, length = 255)
     private String email;
-    private Instant created;
+
+    @Column(nullable = false)
     private boolean enabled;
+
+    @Column(nullable = false)
+    private Instant createdDate;
 }

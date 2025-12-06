@@ -10,7 +10,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommentsDto {
-    private Long id;
+    private Long commentId;
     private Long postId;
     private Instant createdDate;
     @NotBlank

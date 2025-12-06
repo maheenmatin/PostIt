@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SubredditDto {
-    private Long id;
+public class CommunityDto {
+    private Long communityId;
     @NotBlank(message = "Community name is required")
     private String name;
     @NotBlank(message = "Description is required")

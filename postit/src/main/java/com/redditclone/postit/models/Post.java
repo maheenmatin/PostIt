@@ -6,24 +6,33 @@ import java.time.Instant;
 
 @Getter
 @Setter
-@Entity
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId;
+
+    @Column(nullable = false)
     private String postName;
+
     private String url;
+
     @Lob
     private String description;
+
     private Integer voteCount = 0;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
-    private User user;
+
+    @Column(nullable = false)
     private Instant createdDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private Subreddit subreddit;
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "community_id", referencedColumnName = "communityId", nullable = false)
+    private Community community;
 }

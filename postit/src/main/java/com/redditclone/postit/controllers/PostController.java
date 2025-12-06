@@ -18,7 +18,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<Void> createPost(@RequestBody PostRequest postRequest) {
-        postService.save(postRequest);
+        postService.savePost(postRequest);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -32,9 +32,9 @@ public class PostController {
         return status(HttpStatus.OK).body(postService.getPost(id));
     }
 
-    @GetMapping(params = "subredditId")
-    public ResponseEntity<List<PostResponse>> getPostsBySubreddit(@RequestParam Long subredditId) {
-        return status(HttpStatus.OK).body(postService.getPostsBySubreddit(subredditId));
+    @GetMapping(params = "communityId")
+    public ResponseEntity<List<PostResponse>> getPostsByCommunity(@RequestParam Long communityId) {
+        return status(HttpStatus.OK).body(postService.getPostsByCommunity(communityId));
     }
 
     @GetMapping(params = "username")
