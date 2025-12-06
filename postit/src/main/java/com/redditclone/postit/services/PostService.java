@@ -3,13 +3,13 @@ package com.redditclone.postit.services;
 import com.redditclone.postit.dto.PostRequest;
 import com.redditclone.postit.dto.PostResponse;
 import com.redditclone.postit.exceptions.PostItException.PostNotFoundException;
-import com.redditclone.postit.exceptions.PostItException.SubredditNotFoundException;
+import com.redditclone.postit.exceptions.PostItException.CommunityNotFoundException;
 import com.redditclone.postit.mappers.PostMapper;
+import com.redditclone.postit.models.Community;
 import com.redditclone.postit.models.Post;
-import com.redditclone.postit.models.Subreddit;
 import com.redditclone.postit.models.User;
 import com.redditclone.postit.repositories.PostRepository;
-import com.redditclone.postit.repositories.SubredditRepository;
+import com.redditclone.postit.repositories.CommunityRepository;
 import com.redditclone.postit.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,15 +25,15 @@ import static java.util.stream.Collectors.toList;
 @Transactional
 public class PostService {
     private final PostRepository postRepository;
-    private final SubredditRepository subredditRepository;
+    private final CommunityRepository communityRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
     private final PostMapper postMapper;
 
-    public void save(PostRequest postRequest) {
-        Subreddit subreddit = subredditRepository.findByName(postRequest.getSubredditName())
-                .orElseThrow(() -> new SubredditNotFoundException(postRequest.getSubredditName()));
-        postRepository.save(postMapper.map(postRequest, subreddit, authService.getCurrentUser()));
+    public void savePost(PostRequest postRequest) {
+        Community community = communityRepository.findByName(postRequest.getCommunityName())
+                .orElseThrow(() -> new CommunityNotFoundException(postRequest.getCommunityName()));
+        postRepository.save(postMapper.maptoPost(postRequest, community, authService.getCurrentUser()));
     }
 
     @Transactional(readOnly = true)
@@ -52,10 +52,10 @@ public class PostService {
     }
 
     @Transactional(readOnly = true)
-    public List<PostResponse> getPostsBySubreddit(Long subredditId) {
-        Subreddit subreddit = subredditRepository.findById(subredditId)
-                .orElseThrow(() -> new SubredditNotFoundException(subredditId.toString()));
-        List<Post> posts = postRepository.findAllBySubreddit(subreddit);
+    public List<PostResponse> getPostsByCommunity(Long communityId) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new CommunityNotFoundException(communityId.toString()));
+        List<Post> posts = postRepository.findAllByCommunity(community);
         return posts.stream().map(postMapper::mapToDto).collect(toList());
     }
 

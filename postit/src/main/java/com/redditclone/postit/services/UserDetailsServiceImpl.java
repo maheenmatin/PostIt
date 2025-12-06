@@ -22,17 +22,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
-        // TODO: can reduce the number of lines here
         Optional<User> userOptional = userRepository.findByUsername(username);
         User user = userOptional.orElseThrow(() -> new UsernameNotFoundException(
                 "Unable to find user with username " + username));
 
-        // TODO: currently requires fully qualified package name
-        //  best practice is to refactor User model to UserEntity
         return new org.springframework.security.core.userdetails.User(
-                user.getUsername(), user.getPassword(),
-                user.isEnabled(), true, true,
-                true, getAuthorities("USER"));
+            user.getUsername(), user.getPassword(),
+            user.isEnabled(), true, true,
+            true, getAuthorities("USER"));
     }
 
     // roles must be in the form of granted authorities

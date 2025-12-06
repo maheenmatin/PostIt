@@ -9,7 +9,6 @@ import com.redditclone.postit.models.NotificationEmail;
 import com.redditclone.postit.models.User;
 import com.redditclone.postit.models.VerificationToken;
 import com.redditclone.postit.repositories.UserRepository;
-import com.redditclone.postit.repositories.VerificationTokenRepository;
 import com.redditclone.postit.security.JwtProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -23,15 +22,13 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
-import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
-    private final VerificationTokenRepository verificationTokenRepository;
+    private final VerificationTokenService verificationTokenService;
     private final MailService mailService;
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
@@ -44,37 +41,25 @@ public class AuthService {
         user.setUsername(registerRequest.getUsername());
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setCreated(Instant.now());
+        user.setCreatedDate(Instant.now());
         user.setEnabled(false);
         userRepository.save(user);
 
         // send email with verification token
-        String token = generateVerificationToken(user);
+        String token = verificationTokenService.generateVerificationToken(user);
         mailService.sendMail(new NotificationEmail("Activate your PostIt account",
                 user.getEmail(), "Thank you for signing up to PostIt. " +
                 "Please click on the following link to activate your account: " +
                 "http://localhost:8080/api/auth/accountVerification/" + token));
     }
 
-    private String generateVerificationToken(User user) {
-        // create token
-        String token = UUID.randomUUID().toString();
-        VerificationToken verificationToken = new VerificationToken();
-        verificationToken.setToken(token);
-        verificationToken.setUser(user); // link token to user
-        verificationTokenRepository.save(verificationToken); // save token in database
-
-        return token;
-    }
-
-    public void verifyAccount(String token) {
-        // optional allows null value
-        Optional<VerificationToken> verificationToken = verificationTokenRepository.findByToken(token);
-        verificationToken.orElseThrow(() -> new PostItException("Invalid token")); // throw if null
-        fetchUserAndEnable(verificationToken.get());
-    }
-
     @Transactional
+    public void verifyAccount(String token) {
+        VerificationToken verificationToken = verificationTokenService.getVerificationTokenEntity(token)
+                .orElseThrow(() -> new PostItException("Invalid token")); // throw if null
+        fetchUserAndEnable(verificationToken);
+    }
+
     public void fetchUserAndEnable(VerificationToken verificationToken) {
         String username = verificationToken.getUser().getUsername(); // use getter methods from models package
         User user = userRepository.findByUsername(username).orElseThrow(() -> new PostItException(
@@ -91,26 +76,30 @@ public class AuthService {
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(),
                 loginRequest.getPassword()));
 
+        String username = loginRequest.getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new PostItException(
+                "Unable to find user with username " + username));
+
         SecurityContextHolder.getContext().setAuthentication(authenticate);
         String token = jwtProvider.generateToken(authenticate);
 
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
-                .refreshToken(refreshTokenService.generateRefreshToken().getToken())
+                .refreshToken(refreshTokenService.generateRefreshToken(user).getToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
                 .username(loginRequest.getUsername())
                 .build();
     }
 
     public AuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest) {
-        refreshTokenService.validateRefreshToken(refreshTokenRequest.getRefreshToken());
-        String token = jwtProvider.generateTokenWithUserName(refreshTokenRequest.getUsername());
+        User user = refreshTokenService.getUserForRefreshToken(refreshTokenRequest.getRefreshToken());
+        String token = jwtProvider.generateTokenWithUserName(user.getUsername());
 
         return AuthenticationResponse.builder()
                 .authenticationToken(token)
                 .refreshToken(refreshTokenRequest.getRefreshToken())
                 .expiresAt(Instant.now().plusMillis(jwtProvider.getJwtExpirationInMillis()))
-                .username(refreshTokenRequest.getUsername())
+                .username(user.getUsername())
                 .build();
     }
 

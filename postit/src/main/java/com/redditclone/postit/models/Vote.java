@@ -12,18 +12,23 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
+@Entity
 public class Vote {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long voteId;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private VoteType voteType;
+
     @NotNull
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "postId", referencedColumnName = "postId")
+    @JoinColumn(name = "post_id", referencedColumnName = "postId")
     private Post post;
+
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
     private User user;
 }

@@ -13,17 +13,25 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Builder
-public class Subreddit {
+@Entity
+public class Community {
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    private Long id;
+    private Long communityId;
+
+    @Column(nullable = false, length = 100)
     private String name;
+
+    @Column(nullable = false, length = 500)
     private String description;
-    @OneToMany(fetch = LAZY)
+
+    @OneToMany(mappedBy = "community", fetch = LAZY)
     private List<Post> posts;
+
+    @Column(nullable = false)
     private Instant createdDate;
+
     @ManyToOne(fetch = LAZY)
     private User user;
 }

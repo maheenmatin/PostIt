@@ -21,7 +21,7 @@ class MailService {
     // email is sent after database is queried+updated - this is expensive/time-consuming
     // call method asynchronously (new thread) to decrease response time
     @Async
-    void sendMail(NotificationEmail notificationEmail) {
+    public void sendMail(NotificationEmail notificationEmail) {
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("postit@email.com");

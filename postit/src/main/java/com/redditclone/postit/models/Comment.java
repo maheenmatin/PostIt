@@ -15,13 +15,19 @@ import java.time.Instant;
 public class Comment {
     @Id // primary key
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-increment
-    private Long id;
+    private Long commentId;
+
+    @Column(nullable = false)
     private String text;
+
     @ManyToOne(fetch = FetchType.LAZY) // fetch only when needed
-    @JoinColumn(name = "postId", referencedColumnName = "postId") // foreign key
+    @JoinColumn(name = "post_id", referencedColumnName = "postId", nullable = false) // foreign key
     private Post post;
+
+    @Column(nullable = false)
     private Instant createdDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "userId", referencedColumnName = "userId")
+    @JoinColumn(name = "user_id", referencedColumnName = "userId", nullable = false)
     private User user;
 }

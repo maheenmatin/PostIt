@@ -24,12 +24,12 @@ public class JwtProvider {
 
     public String generateTokenWithUserName(String username) {
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .issuer("self")
-                .issuedAt(Instant.now())
-                .expiresAt(Instant.now().plusMillis(jwtExpirationInMillis))
-                .subject(username)
-                .claim("scope", "ROLE_USER")
-                .build();
+            .issuer("self")
+            .issuedAt(Instant.now())
+            .expiresAt(Instant.now().plusMillis(jwtExpirationInMillis))
+            .subject(username)
+            .claim("scope", "ROLE_USER")
+            .build();
 
         return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
     }

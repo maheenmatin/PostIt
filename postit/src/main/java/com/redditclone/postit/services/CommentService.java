@@ -14,6 +14,8 @@ import com.redditclone.postit.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
@@ -28,10 +30,11 @@ public class CommentService {
     private final MailContentBuilder mailContentBuilder;
     private final MailService mailService;
 
+    @Transactional
     public void save(CommentsDto commentsDto) {
         Post post = postRepository.findById(commentsDto.getPostId())
                 .orElseThrow(() -> new PostNotFoundException(commentsDto.getPostId().toString()));
-        Comment comment = commentMapper.map(commentsDto, post, authService.getCurrentUser());
+        Comment comment = commentMapper.mapToComment(commentsDto, post, authService.getCurrentUser());
         commentRepository.save(comment);
 
         String message = mailContentBuilder.build(
@@ -44,13 +47,16 @@ public class CommentService {
                 user.getUsername() + " commented on your post", user.getEmail(), message));
     }
 
+    @Transactional(readOnly = true)
     public List<CommentsDto> getAllCommentsForPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId.toString()));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
         return commentRepository.findByPost(post)
                 .stream()
                 .map(commentMapper::mapToDto).toList();
     }
 
+    @Transactional(readOnly = true)
     public List<CommentsDto> getAllCommentsForUser(String userName) {
         User user = userRepository.findByUsername(userName)
                 .orElseThrow(() -> new UsernameNotFoundException(userName));
@@ -58,14 +64,5 @@ public class CommentService {
                 .stream()
                 .map(commentMapper::mapToDto)
                 .toList();
-    }
-
-    public boolean containsSwearWords(String comment) {
-        /*
-        if (comment.contains("xyz")) {
-            throw new PostItException("Comment contains unacceptable language");
-        }
-         */
-        return false;
     }
 }

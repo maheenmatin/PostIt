@@ -2,6 +2,7 @@ package com.redditclone.postit.services;
 
 import com.redditclone.postit.exceptions.PostItException.PostItException;
 import com.redditclone.postit.models.RefreshToken;
+import com.redditclone.postit.models.User;
 import com.redditclone.postit.repositories.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,17 +16,25 @@ import java.util.UUID;
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
-    public RefreshToken generateRefreshToken() {
+    public RefreshToken generateRefreshToken(User user) {
+        String token;
+
+        do {
+            token = UUID.randomUUID().toString();
+        } while (refreshTokenRepository.existsByToken(token));
+
         RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setToken(UUID.randomUUID().toString());
+        refreshToken.setToken(token);
         refreshToken.setCreatedDate(Instant.now());
+        refreshToken.setUser(user);
 
         return refreshTokenRepository.save(refreshToken);
     }
 
-    void validateRefreshToken(String token) {
-        refreshTokenRepository.findByToken(token)
-                .orElseThrow(() -> new PostItException("Invalid refresh Token"));
+    public User getUserForRefreshToken(String token) {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(token)
+                .orElseThrow(() -> new PostItException("Invalid refresh token"));
+        return refreshToken.getUser();
     }
 
     public void deleteRefreshToken(String token) {
