@@ -1,0 +1,13 @@
+<div class="sidebar-view-subreddit">
+  <h5 class="subreddit-sidebar-text">Top Communities</h5>
+  <hr />
+  <span *ngFor="let community of communities">
+    <span class="subreddit-text"
+      ><a href="/" (click)="filterCommunity(community.name)">{{ community.name }}</a></span
+    >
+    <br />
+  </span>
+  <div>
+    <a style="font-weight: bold" routerLink="/list-communities">View all</a>
+  </div>
+</div>

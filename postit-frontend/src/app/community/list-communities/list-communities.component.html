@@ -1,0 +1,24 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-9">
+      <h2 class="subreddit-text">Communities</h2>
+      <hr />
+      <div>
+        <li *ngFor="let community of communities" class="py-1">
+          <a href="/" (click)="filterCommunity(community.name)">{{ community.name }}</a>
+        </li>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="sidebar-view-subreddit">
+        <h5 class="subreddit-sidebar-text">About PostIt</h5>
+        <hr />
+        <p class="subreddit-sidebar-text">
+          PostIt is a community of communities. The heart of PostIt is an online bulletin board system. It is the
+          "front page" of the internet.
+        </p>
+        <a style="font-weight: bold" routerLink="/create-community">Create Community</a>
+      </div>
+    </div>
+  </div>
+</div>
