@@ -37,16 +37,17 @@ export class LoginComponent {
   }
 
   ngOnInit() {
+    // Display activation notice after signup redirect.
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params["registered"] !== undefined && params["registered"] === "true") {
-        this.toastr.success("Signup successful");
         this.registerSuccessMessage =
-          "An activation email has been sent - " + " please activate your account before you login!";
+          "Signup successful. An activation email has been sent - please activate your account before you login!";
       }
     });
   }
 
   login() {
+    // Build payload from the form and attempt authentication.
     this.loginRequestPayload.username = this.loginForm.get("username")?.value;
     this.loginRequestPayload.password = this.loginForm.get("password")?.value;
 

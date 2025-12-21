@@ -1,0 +1,27 @@
+<div class="reddit-body">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="community-list-card">
+          <div class="community-list-header">
+            <h2>Communities</h2>
+            <p>Explore the communities below to find where you want to post.</p>
+          </div>
+          <div class="community-list">
+            <div class="community-list-item" *ngFor="let community of communities">
+              <div>
+                <a [routerLink]="['/community', community.communityId]" class="community-name">{{ community.name }}</a>
+                <div class="community-description">{{ community.description }}</div>
+              </div>
+              <div class="community-meta">{{ community.numberOfPosts || 0 }} posts</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <app-side-bar [welcomeText]="'Welcome to the PostIt communities page!'" ></app-side-bar>
+        <app-community-side-bar></app-community-side-bar>
+      </div>
+    </div>
+  </div>
+</div>
