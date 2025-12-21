@@ -35,4 +35,8 @@ export class CommunityService {
   createCommunity(community: CommunityModel): Observable<CommunityModel> {
     return this.http.post<CommunityModel>(API_ENDPOINTS.community, community);
   }
+
+  getCommunity(id: number): Observable<CommunityModel> {
+    return this.http.get<CommunityModel>(`${API_ENDPOINTS.community}/${id}`);
+  }
 }

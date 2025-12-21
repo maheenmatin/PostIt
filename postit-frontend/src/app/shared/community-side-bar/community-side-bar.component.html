@@ -3,7 +3,7 @@
   <hr />
   <span *ngFor="let community of communities">
     <span class="subreddit-text"
-      ><a href="/" (click)="filterCommunity(community.name)">{{ community.name }}</a></span
+      ><a [routerLink]="['/community', community.communityId]">{{ community.name }}</a></span
     >
     <br />
   </span>

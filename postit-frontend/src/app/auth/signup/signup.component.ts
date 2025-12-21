@@ -37,11 +37,19 @@ export class SignupComponent {
     this.authService.signup(this.signupRequestPayload).subscribe({
       next: () => {
         this.router.navigate(["/login"], { queryParams: { registered: "true" } });
-        this.toastr.success("Signup successful");
       },
       error: (error) => {
-        console.log(error);
-        this.toastr.error("Registration failed! Please try again");
+        const backendMessage = (error?.error?.message || error?.error?.error || "").toString().toLowerCase();
+        const duplicateError =
+          error?.status === 409 ||
+          backendMessage.includes("exists") ||
+          backendMessage.includes("duplicate") ||
+          backendMessage.includes("unique");
+        this.toastr.error(
+          duplicateError
+            ? "Username or email already exists. Please try another."
+            : "Registration failed. Please try again."
+        );
       },
     });
   }
