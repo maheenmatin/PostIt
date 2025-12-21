@@ -39,9 +39,8 @@ export class LoginComponent {
   ngOnInit() {
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params["registered"] !== undefined && params["registered"] === "true") {
-        this.toastr.success("Signup successful");
         this.registerSuccessMessage =
-          "An activation email has been sent - " + " please activate your account before you login!";
+          "Signup successful. An activation email has been sent - please activate your account before you login!";
       }
     });
   }

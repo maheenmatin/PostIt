@@ -1,0 +1,7 @@
+<div class="container community-detail">
+  <div class="community-header">
+    <h1 class="community-title">{{ community?.name }}</h1>
+    <p class="community-description">{{ community?.description }}</p>
+  </div>
+  <app-post-tile [posts]="posts" [disableCommunityFilter]="true"></app-post-tile>
+</div>

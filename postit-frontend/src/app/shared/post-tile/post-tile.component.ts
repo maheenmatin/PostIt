@@ -17,6 +17,7 @@ import { PostService } from "../post.service";
 })
 export class PostTileComponent implements OnInit, OnChanges {
   @Input() posts: PostModel[] = [];
+  @Input() disableCommunityFilter = false;
   faComments = faComments;
   postsFiltered: PostModel[] = [];
 
@@ -47,6 +48,11 @@ export class PostTileComponent implements OnInit, OnChanges {
   }
 
   private applyCommunityFilter(): void {
+    if (this.disableCommunityFilter) {
+      this.postsFiltered = this.posts;
+      return;
+    }
+
     const selectedCommunity = this.communityService.getSelectedCommunity();
     this.postsFiltered = selectedCommunity
       ? this.posts.filter((post) => post.communityName === selectedCommunity)

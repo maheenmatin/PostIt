@@ -5,7 +5,7 @@
       <hr />
       <div>
         <li *ngFor="let community of communities" class="py-1">
-          <a href="/" (click)="filterCommunity(community.name)">{{ community.name }}</a>
+          <a [routerLink]="['/community', community.communityId]">{{ community.name }}</a>
         </li>
       </div>
     </div>
