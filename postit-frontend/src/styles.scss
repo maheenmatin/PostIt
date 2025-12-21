@@ -1,6 +1,6 @@
 // Bootstrap overrides
-$body-bg: #1e1e1e;
-$body-color: #ffffff;
+$body-bg: #f4f6fb;
+$body-color: #1f2330;
 $dropdown-link-color: #1e1e1e;
 
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
@@ -14,6 +14,28 @@ html {
 body {
   margin-top: 0;
   height: 100%;
+}
+
+.reddit-body {
+  padding: 20px 0 40px;
+}
+
+.btnCreatePost,
+.btnCreateCommunity,
+.btnCreateSubreddit,
+.btnCreatePost,
+.btnCreateCommunity {
+  border-radius: 999px;
+}
+
+@media (max-width: 768px) {
+  .reddit-body {
+    padding: 12px 0 24px;
+  }
+
+  .navbar .reddit-text {
+    font-size: 14px;
+  }
 }
 
 input.ng-invalid.ng-touched {

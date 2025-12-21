@@ -1,5 +1,6 @@
 header {
   border-radius: 1px solid;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
 }
 
 .reddit-icon-svg {
@@ -22,9 +23,9 @@ header {
 .login,
 .sign-up {
   background-color: transparent;
-  border-color: #0079d3;
-  color: #0079d3;
-  fill: #0079d3;
+  border-color: #2563eb;
+  color: #2563eb;
+  fill: #2563eb;
   border: 1px solid;
   border-radius: 4px;
   box-sizing: border-box;
@@ -41,9 +42,9 @@ header {
 }
 
 .sign-up {
-  background-color: #0079d3;
-  border-color: #0079d3;
-  color: aliceblue;
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
 }
 
 .sign-up:hover {
@@ -52,9 +53,9 @@ header {
 
 .userdetails {
   background-color: transparent;
-  border-color: #0079d3;
-  color: #0079d3;
-  fill: #0079d3;
+  border-color: #2563eb;
+  color: #2563eb;
+  fill: #2563eb;
   border: 1px solid;
   border-radius: 4px;
   box-sizing: border-box;
@@ -85,7 +86,7 @@ header {
 }
 
 .dropdown-item:hover {
-  background-color: #0079d3;
+  background-color: #2563eb;
 }
 
 .dropdown-menu {
@@ -98,4 +99,20 @@ header {
   margin-right: 5px;
   max-height: 24px;
   max-width: 24px;
+}
+
+@media (max-width: 768px) {
+  .reddit-icon-svg {
+    height: 40px;
+    width: 40px;
+  }
+
+  .reddit-text {
+    font-size: 14px;
+  }
+
+  .login,
+  .sign-up {
+    padding: 3px 10px;
+  }
 }
