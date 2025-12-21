@@ -73,3 +73,23 @@
   color: #5a6478;
   font-size: 14px;
 }
+
+.sign-up {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  border-radius: 10px;
+  color: #ffffff;
+  fill: #2563eb;
+  border: 1px solid;
+  box-sizing: border-box;
+  text-align: center;
+  letter-spacing: 1px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  opacity: 1;
+}

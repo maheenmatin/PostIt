@@ -28,7 +28,7 @@ export const TokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:
 
   return next(authReq).pipe(
     catchError((error) => {
-      if (error instanceof HttpErrorResponse && error.status === 401) {
+      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)) {
         return handleAuthErrors(authReq, next, authService);
       }
       return throwError(() => error);
