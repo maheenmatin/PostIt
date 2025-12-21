@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
 @Component({
@@ -9,6 +9,7 @@ import { Router } from "@angular/router";
   styleUrl: "./side-bar.component.css",
 })
 export class SideBarComponent {
+  @Input() welcomeText = "Welcome to the PostIt home page! Feel free to relax and check in with your favorite communities...";
   constructor(private router: Router) {}
 
   goToCreatePost() {
