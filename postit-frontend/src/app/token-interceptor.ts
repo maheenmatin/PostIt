@@ -4,7 +4,6 @@ import { catchError, finalize, switchMap, take, filter } from "rxjs/operators";
 import { AuthService } from "./auth/shared/auth.service";
 import { inject } from "@angular/core";
 import { LoginResponse } from "./auth/login/login-response.payload";
-import { API_ENDPOINTS } from "./shared/api.constants";
 
 let isTokenRefreshing = false;
 const refreshTokenSubject = new BehaviorSubject<string | null>(null);
@@ -12,15 +11,15 @@ const refreshTokenSubject = new BehaviorSubject<string | null>(null);
 export const TokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<any> => {
   const authService = inject(AuthService);
 
-  const skipAuthUrls = [
-    `${API_ENDPOINTS.auth}/login`,
-    `${API_ENDPOINTS.auth}/refresh/token`,
-    `${API_ENDPOINTS.auth}/signup`,
-    `${API_ENDPOINTS.auth}/logout`,
-    `${API_ENDPOINTS.auth}/accountVerification`,
+  const skipAuthPaths = [
+    "/api/auth/login",
+    "/api/auth/refresh/token",
+    "/api/auth/signup",
+    "/api/auth/logout",
+    "/api/auth/accountVerification",
   ];
 
-  if (skipAuthUrls.some((url) => req.url.startsWith(url))) {
+  if (skipAuthPaths.some((path) => req.url.includes(path))) {
     return next(req);
   }
 
@@ -30,7 +29,7 @@ export const TokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next:
   return next(authReq).pipe(
     catchError((error) => {
       if (error instanceof HttpErrorResponse && error.status === 401) {
-        return handleAuthErrors(req, next, authService);
+        return handleAuthErrors(authReq, next, authService);
       }
       return throwError(() => error);
     })
