@@ -1,24 +1,25 @@
 import { Component } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { AuthService } from "../auth/shared/auth.service";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { CommonModule } from "@angular/common";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { SubredditService } from "../subreddit/subreddit.service";
+import { AuthService } from "../auth/shared/auth.service";
+import { CommunityService } from "../community/community.service";
 
 @Component({
   selector: "app-header",
   standalone: true,
-  imports: [RouterModule, CommonModule, NgbModule],
+  imports: [RouterModule, CommonModule, NgbModule, FontAwesomeModule],
   templateUrl: "./header.component.html",
   styleUrl: "./header.component.css",
 })
 export class HeaderComponent {
   faUser = faUser;
-  isLoggedIn: boolean = false;
-  username: string = "";
+  isLoggedIn = false;
+  username = "";
 
-  constructor(private authService: AuthService, private router: Router, private subredditService: SubredditService) {}
+  constructor(private authService: AuthService, private router: Router, private communityService: CommunityService) {}
 
   ngOnInit() {
     this.authService.loggedIn.subscribe((data: boolean) => (this.isLoggedIn = data));
@@ -37,7 +38,7 @@ export class HeaderComponent {
     this.router.navigateByUrl("");
   }
 
-  filterSubreddit(): void {
-    this.subredditService.setSelectedSubreddit(undefined);
+  filterCommunity(): void {
+    this.communityService.setSelectedCommunity(undefined);
   }
 }

@@ -1,11 +1,12 @@
 import { EventEmitter, Injectable, Output } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { SignupRequestPayload } from "../signup/signup-request.payload";
-import { map, Observable, tap, throwError } from "rxjs";
+import { map, Observable, tap } from "rxjs";
 import { LocalStorageService } from "ngx-webstorage";
+import { Router } from "@angular/router";
+import { SignupRequestPayload } from "../signup/signup-request.payload";
 import { LoginRequestPayload } from "../login/login-request.payload";
 import { LoginResponse } from "../login/login-response.payload";
-import { Router } from "@angular/router";
+import { API_ENDPOINTS } from "../../shared/api.constants";
 
 @Injectable({
   providedIn: "root",
@@ -16,20 +17,20 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient, private localStorage: LocalStorageService, private router: Router) {}
 
-  signup(signupRequestPayload: SignupRequestPayload): Observable<any> {
-    return this.httpClient.post("http://localhost:8080/api/auth/signup", signupRequestPayload, {
+  signup(signupRequestPayload: SignupRequestPayload): Observable<string> {
+    return this.httpClient.post(`${API_ENDPOINTS.auth}/signup`, signupRequestPayload, {
       responseType: "text",
     });
   }
 
   login(loginRequestPayload: LoginRequestPayload): Observable<boolean> {
-    return this.httpClient.post<LoginResponse>("http://localhost:8080/api/auth/login", loginRequestPayload).pipe(
+    return this.httpClient.post<LoginResponse>(`${API_ENDPOINTS.auth}/login`, loginRequestPayload).pipe(
       map((data) => {
         this.localStorage.store("authenticationToken", data.authenticationToken);
         this.localStorage.store("username", data.username);
         this.localStorage.store("refreshToken", data.refreshToken);
         this.localStorage.store("expiresAt", data.expiresAt);
-      
+
         this.localStorage.store("loggedIn", "true");
         this.loggedIn.emit(true);
         return true;
@@ -39,13 +40,13 @@ export class AuthService {
 
   logout() {
     this.httpClient
-      .post("http://localhost:8080/api/auth/logout", this.createRefreshTokenPayload, { responseType: "text" })
+      .post(`${API_ENDPOINTS.auth}/logout`, this.createRefreshTokenPayload(), { responseType: "text" })
       .subscribe({
         next: (data) => {
           console.log(data);
         },
         error: (error) => {
-          throwError(() => new Error(error))
+          console.error("Logout failed", error);
         },
       });
     this.localStorage.clear("authenticationToken");
@@ -61,7 +62,7 @@ export class AuthService {
 
   refreshToken() {
     return this.httpClient
-      .post<LoginResponse>("http://localhost:8080/api/auth/refresh/token", this.createRefreshTokenPayload())
+      .post<LoginResponse>(`${API_ENDPOINTS.auth}/refresh/token`, this.createRefreshTokenPayload())
       .pipe(
         tap((response) => {
           this.localStorage.clear("authenticationToken");
@@ -73,7 +74,7 @@ export class AuthService {
       );
   }
 
-  createRefreshTokenPayload(): any {
+  createRefreshTokenPayload(): { refreshToken: string; username: string } {
     return {
       refreshToken: this.getRefreshToken(),
       username: this.getUserName(),

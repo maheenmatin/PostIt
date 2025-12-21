@@ -9,24 +9,24 @@
       <div class="col-md-11">
         <span>
           <span class="subreddit-text"
-            ><a class="post-url" href="">{{ post.subredditName }}</a></span
+            ><a class="post-url" href="">{{ post.communityName }}</a></span
           >
           <span>
             . Posted
             <span> {{ post.duration }} </span>
             by
-            <a class="username" href="">{{ post.userName }}</a>
+            <a class="username" [routerLink]="['/user-profile', post.userName]">{{ post.userName }}</a>
           </span>
         </span>
         <hr />
-        <a routerLink="post.url" class="post-title">{{ post.postName }}</a>
+        <a [href]="post.url" class="post-title">{{ post.postName }}</a>
         <div>
           <p class="post-text" [innerHtml]="post.description"></p>
         </div>
         <div class="post-comment">
           <form [formGroup]="commentForm" (ngSubmit)="postComment()">
             <div class="form-group">
-              <textarea class="form-control" [formControlName]="'text'" placeholder="Your thoughts?"></textarea>
+              <textarea class="form-control" formControlName="text" placeholder="Your thoughts?"></textarea>
             </div>
             <button type="submit" class="login float-right">Comment</button>
           </form>
@@ -34,7 +34,7 @@
         <div style="margin-top: 60px" *ngFor="let comment of comments">
           <div class="comment">
             <div class="username">
-              <a routerLink="/user/comment.username">{{ comment.userName }}</a>
+              <a [routerLink]="['/user-profile', comment.userName]">{{ comment.userName }}</a>
             </div>
             <div>
               <p>{{ comment.createdDate }}</p>
@@ -48,6 +48,6 @@
   </div>
   <div class="col-md-3">
     <app-side-bar></app-side-bar>
-    <app-subreddit-side-bar></app-subreddit-side-bar>
+    <app-community-side-bar></app-community-side-bar>
   </div>
 </div>

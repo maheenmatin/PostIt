@@ -1,25 +1,25 @@
 import { Component } from "@angular/core";
+import { ActivatedRoute, RouterModule } from "@angular/router";
+import { CommonModule } from "@angular/common";
 import { PostTileComponent } from "../shared/post-tile/post-tile.component";
-import { ActivatedRoute } from "@angular/router";
 import { CommentPayload } from "../comment/comment.payload";
 import { CommentService } from "../comment/comment.service";
 import { PostModel } from "../shared/post-model";
 import { PostService } from "../shared/post.service";
-import { CommonModule } from "@angular/common";
 
 @Component({
   selector: "app-user-profile",
   standalone: true,
-  imports: [PostTileComponent, CommonModule],
+  imports: [PostTileComponent, CommonModule, RouterModule],
   templateUrl: "./user-profile.component.html",
   styleUrl: "./user-profile.component.css",
 })
 export class UserProfileComponent {
   name: string;
-  posts!: PostModel[];
-  comments!: CommentPayload[];
-  postLength!: number;
-  commentLength!: number;
+  posts: PostModel[] = [];
+  comments: CommentPayload[] = [];
+  postLength = 0;
+  commentLength = 0;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,35 +28,36 @@ export class UserProfileComponent {
   ) {
     this.name = this.activatedRoute.snapshot.params["name"];
 
-    this.postService.getAllPostsByUser(this.name).subscribe((data) => {
-      this.posts = data;
-      this.postLength = data.length;
+    this.postService.getPostsByUser(this.name).subscribe({
+      next: (data) => {
+        this.posts = data;
+        this.postLength = data.length;
+      },
+      error: (error) => console.error("Error loading posts", error),
     });
-    this.commentService.getAllCommentsByUser(this.name).subscribe((data) => {
-      this.comments = data;
-      this.commentLength = data.length;
-      this.convertToDate();
+
+    this.commentService.getAllCommentsByUser(this.name).subscribe({
+      next: (data) => {
+        this.comments = data.map((comment) => ({
+          ...comment,
+          createdDate: comment.createdDate ? this.formatDate(comment.createdDate) : comment.createdDate,
+        }));
+        this.commentLength = data.length;
+      },
+      error: (error) => console.error("Error loading comments", error),
     });
   }
 
-  ngOnInit(): void {}
-
-  private convertToDate() {
-    if (this.comments && this.comments.length > 0) {
-      this.comments.forEach((comment) => {
-        if (comment.createdDate) {
-          const timestamp = parseFloat(comment.createdDate);
-          const date = new Date(timestamp * 1000);
-
-          const londonTime = new Intl.DateTimeFormat("en-GB", {
-            timeZone: "Europe/London",
-            dateStyle: "short",
-            timeStyle: "short",
-          }).format(date);
-
-          comment.createdDate = londonTime;
-        }
-      });
+  private formatDate(dateInput: string): string {
+    const date = new Date(dateInput);
+    if (Number.isNaN(date.getTime())) {
+      return dateInput;
     }
+
+    return new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Europe/London",
+      dateStyle: "short",
+      timeStyle: "short",
+    }).format(date);
   }
 }

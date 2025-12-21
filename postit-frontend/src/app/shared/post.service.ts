@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { PostModel } from "./post-model";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { lastValueFrom, Observable } from "rxjs";
+import { PostModel } from "./post-model";
 import { CreatePostPayload } from "../post/create-post/create-post.payload";
+import { API_ENDPOINTS } from "./api.constants";
 
 @Injectable({
   providedIn: "root",
@@ -11,26 +12,28 @@ export class PostService {
   constructor(private http: HttpClient) {}
 
   getAllPosts(): Observable<Array<PostModel>> {
-    return this.http.get<Array<PostModel>>("http://localhost:8080/api/posts");
+    return this.http.get<Array<PostModel>>(API_ENDPOINTS.posts);
   }
 
   async getAllPostsAsync(): Promise<PostModel[]> {
     return await lastValueFrom(this.getAllPosts());
   }
 
-  createPost(postPayload: CreatePostPayload): Observable<any> {
-    return this.http.post("http://localhost:8080/api/posts", postPayload);
+  createPost(postPayload: CreatePostPayload): Observable<void> {
+    return this.http.post<void>(API_ENDPOINTS.posts, postPayload);
   }
 
   getPost(id: number): Observable<PostModel> {
-    return this.http.get<PostModel>("http://localhost:8080/api/posts/" + id);
+    return this.http.get<PostModel>(`${API_ENDPOINTS.posts}/${id}`);
   }
 
-  getAllPostsByUser(name: string): Observable<PostModel[]> {
-    return this.http.get<PostModel[]>("http://localhost:8080/api/posts?username" + name);
+  getPostsByUser(username: string): Observable<PostModel[]> {
+    const params = new HttpParams().set("username", username);
+    return this.http.get<PostModel[]>(API_ENDPOINTS.posts, { params });
   }
 
-  getAllPostsBySubreddit(subreddit: string): Observable<PostModel[]> {
-    return this.http.get<PostModel[]>("http://localhost:8080/api/posts?subreddit" + subreddit);
+  getPostsByCommunity(communityId: number): Observable<PostModel[]> {
+    const params = new HttpParams().set("communityId", communityId);
+    return this.http.get<PostModel[]>(API_ENDPOINTS.posts, { params });
   }
 }
