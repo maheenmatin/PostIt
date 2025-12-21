@@ -1,6 +1,7 @@
 .post-title {
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
+  color: #1f2330;
   opacity: 1;
 }
 
@@ -9,15 +10,15 @@
 }
 
 .subreddit-text {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .post-url {
-  color: black;
+  color: #2563eb;
 }
 
 .username {
-  color: gray;
+  color: #6b7280;
 }
 
 .post-text {
@@ -25,26 +26,46 @@
 }
 
 .post {
-  --post-line-color: #ccc;
-  border: 1px solid #ccc;
+  border: 1px solid #e3e7ef;
   margin-top: 10px;
   margin-bottom: 10px;
   overflow: hidden;
-  background-color: rgb(255, 255, 255);
-  color: #878a8c;
+  background-color: #ffffff;
+  color: #4a5568;
   position: relative;
-  border-radius: 4px;
-  padding: 5px;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .comment {
-  --post-line-color: #ccc;
-  border: 1px solid #ccc;
+  border: 1px solid #e3e7ef;
   margin-bottom: 10px;
   overflow: hidden;
-  background-color: rgb(255, 255, 255);
-  color: #878a8c;
+  background-color: #ffffff;
+  color: #4a5568;
   position: relative;
-  border-radius: 4px;
-  padding: 5px;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+
+@media (max-width: 768px) {
+  .post-title {
+    font-size: 20px;
+  }
+
+  .post .col-md-1,
+  .post .col-md-11 {
+    max-width: 100%;
+  }
+
+  .post .col-md-1 {
+    flex: 0 0 48px;
+    max-width: 48px;
+  }
+
+  .post .col-md-11 {
+    flex: 1 1 auto;
+  }
 }

@@ -1,10 +1,9 @@
 import { Component } from "@angular/core";
 import { Router, RouterModule } from "@angular/router";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { AuthService } from "../auth/shared/auth.service";
 import { CommonModule } from "@angular/common";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
-import { SubredditService } from "../subreddit/subreddit.service";
+import { AuthService } from "../auth/shared/auth.service";
+import { CommunityService } from "../community/community.service";
 
 @Component({
   selector: "app-header",
@@ -14,30 +13,28 @@ import { SubredditService } from "../subreddit/subreddit.service";
   styleUrl: "./header.component.css",
 })
 export class HeaderComponent {
-  faUser = faUser;
-  isLoggedIn: boolean = false;
-  username: string = "";
+  isLoggedIn = false;
+  username = "";
 
-  constructor(private authService: AuthService, private router: Router, private subredditService: SubredditService) {}
+  constructor(private authService: AuthService, private router: Router, private communityService: CommunityService) {}
 
   ngOnInit() {
+    // Track login state and username for the account dropdown.
     this.authService.loggedIn.subscribe((data: boolean) => (this.isLoggedIn = data));
     this.authService.username.subscribe((data: string) => (this.username = data));
     this.isLoggedIn = this.authService.isLoggedIn();
     this.username = this.authService.getUserName();
   }
 
-  goToUserProfile() {
-    this.router.navigateByUrl("/user-profile/" + this.username);
-  }
-
   logout() {
+    // Delegate logout to the auth service.
     this.authService.logout();
     this.isLoggedIn = false;
     this.router.navigateByUrl("");
   }
 
-  filterSubreddit(): void {
-    this.subredditService.setSelectedSubreddit(undefined);
+  filterCommunity(): void {
+    // Reset any community filtering when returning home.
+    this.communityService.setSelectedCommunity(undefined);
   }
 }

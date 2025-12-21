@@ -1,15 +1,12 @@
 import { Component, Input } from "@angular/core";
 import { faArrowUp, faArrowDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { ToastrService } from "ngx-toastr";
 import { PostModel } from "../post-model";
 import { PostService } from "../post.service";
-import { ToastrService } from "ngx-toastr";
 import { AuthService } from "../../auth/shared/auth.service";
-import { throwError } from "rxjs";
 import { VoteService } from "../vote.service";
-import { VotePayload } from "./vote-payload";
 import { VoteType } from "./vote-type";
-import { LocalStorageService } from "ngx-webstorage";
 
 @Component({
   selector: "app-vote-button",
@@ -25,18 +22,16 @@ export class VoteButtonComponent {
   faArrowDown = faArrowDown;
   upvoteColor!: string;
   downvoteColor!: string;
-  isLoggedIn!: boolean;
+  isLoggedIn = false;
 
   constructor(
     private voteService: VoteService,
     private authService: AuthService,
     private postService: PostService,
-    private toastr: ToastrService,
-    private localStorage: LocalStorageService,
+    private toastr: ToastrService
   ) {
     this.authService.loggedIn.subscribe((data: boolean) => {
       this.isLoggedIn = data;
-      console.log(this.isLoggedIn);
     });
   }
 
@@ -57,24 +52,23 @@ export class VoteButtonComponent {
   }
 
   private vote() {
-    if (this.localStorage.retrieve("loggedIn") === "false" || undefined) {
+    if (!this.authService.isLoggedIn()) {
       this.toastr.error("Login to vote!");
       return;
     }
-    
-    this.voteService.vote(this.createVotePayload()).subscribe(
-      () => {
+
+    this.voteService.vote(this.createVotePayload()).subscribe({
+      next: () => {
         this.updateVoteDetails();
       },
-      (error) => {
-        this.toastr.error((this.voteType === VoteType.UPVOTE) ? "You have already upvoted!" : "You have already downvoted!");
-        throwError(error);
-      }
-    );
+      error: () => {
+        this.toastr.error(this.voteType === VoteType.UPVOTE ? "You have already upvoted!" : "You have already downvoted!");
+      },
+    });
   }
 
   private updateVoteDetails() {
-    this.postService.getPost(this.post.id).subscribe((post) => {
+    this.postService.getPost(this.post.postId).subscribe((post) => {
       this.post = post;
     });
   }
@@ -82,7 +76,7 @@ export class VoteButtonComponent {
   private createVotePayload() {
     return {
       voteType: this.voteType,
-      postId: this.post.id,
+      postId: this.post.postId,
     };
   }
 }

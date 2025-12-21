@@ -30,18 +30,29 @@ export class SignupComponent {
   }
 
   signup() {
+    // Build payload from form values.
     this.signupRequestPayload.email = this.signupForm.get("email")?.value;
     this.signupRequestPayload.username = this.signupForm.get("username")?.value;
     this.signupRequestPayload.password = this.signupForm.get("password")?.value;
 
     this.authService.signup(this.signupRequestPayload).subscribe({
       next: () => {
+        // Redirect to login with a query param for the success banner.
         this.router.navigate(["/login"], { queryParams: { registered: "true" } });
-        this.toastr.success("Signup successful");
       },
       error: (error) => {
-        console.log(error);
-        this.toastr.error("Registration failed! Please try again");
+        // Attempt to detect duplicate username/email errors.
+        const backendMessage = (error?.error?.message || error?.error?.error || "").toString().toLowerCase();
+        const duplicateError =
+          error?.status === 409 ||
+          backendMessage.includes("exists") ||
+          backendMessage.includes("duplicate") ||
+          backendMessage.includes("unique");
+        this.toastr.error(
+          duplicateError
+            ? "Username or email already exists. Please try another."
+            : "Registration failed. Please try again."
+        );
       },
     });
   }

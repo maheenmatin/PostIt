@@ -1,0 +1,29 @@
+.community-detail {
+  padding-top: 20px;
+}
+
+.community-header {
+  margin-bottom: 20px;
+}
+
+.community-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1f2330;
+  margin-bottom: 8px;
+}
+
+.community-description {
+  font-size: 16px;
+  color: #4a5568;
+}
+
+@media (max-width: 768px) {
+  .community-detail {
+    padding-top: 12px;
+  }
+
+  .community-title {
+    font-size: 24px;
+  }
+}

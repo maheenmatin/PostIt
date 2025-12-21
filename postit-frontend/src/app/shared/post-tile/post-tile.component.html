@@ -1,29 +1,42 @@
-<div class="row post" *ngFor="let post of postsFiltered">
-  <app-vote-button [post]="post"></app-vote-button>
-  <div class="col-md-11">
-    <span class="subreddit-info">
-      <span class="subreddit-text"
-        ><span class="posturl">{{ post.subredditName }}</span></span
-      >
-      <span
-        >. Posted by <span class="username">{{ post.userName }}</span></span
-      >
-      <span> {{ post.duration }}</span>
-    </span>
-    <hr />
-    <div class="post-title">
-      <span class="postname">{{ post.postName }}</span>
-    </div>
-    <div>
-      <p class="post-text" [innerHtml]="post.description"></p>
-    </div>
-    <hr />
-    <span>
-      <span class="btnCommments">
-        <fa-icon [icon]="faComments"></fa-icon>
-        Comments({{ post.commentCount }})
+<div>
+  <div class="post" *ngFor="let post of postsFiltered">
+    <div class="post-meta">
+      <span class="subreddit-info">
+        <span class="subreddit-text">
+          <a class="posturl" *ngIf="communityRoute(post.communityName)" [routerLink]="communityRoute(post.communityName)"
+            >{{ post.communityName }}</a
+          >
+          <span class="posturl" *ngIf="!communityRoute(post.communityName)">{{ post.communityName }}</span>
+        </span>
+        <span>
+          . Posted
+          <span> {{ post.duration }} </span>
+          by
+          <a class="username" [routerLink]="['/user-profile', post.userName]">{{ post.userName }}</a>
+        </span>
       </span>
-      <button class="login" (click)="goToPost(post.id)">Read post</button>
-    </span>
+    </div>
+    <hr class="post-divider" />
+    <div class="post-body row">
+      <div class="col-md-1 vote-column">
+        <app-vote-button [post]="post"></app-vote-button>
+      </div>
+      <div class="col-md-11 post-content">
+        <a [routerLink]="['/view-post', post.postId]" class="post-title">{{ post.postName }}</a>
+        <div>
+          <p class="post-text" [innerHtml]="post.description"></p>
+        </div>
+        <div class="post-actions">
+          <p class="post-comment">
+            <fa-icon [icon]="faComments"></fa-icon>
+            {{ commentLabel(post.commentCount) }}
+          </p>
+          <button class="login read-post-button" (click)="goToPost(post.postId)">Read post</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="empty-state" *ngIf="postsFiltered.length === 0">
+    No posts yet!
   </div>
 </div>

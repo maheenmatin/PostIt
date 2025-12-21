@@ -1,0 +1,14 @@
+<div class="sidebar-view-subreddit">
+  <h5 class="subreddit-sidebar-text">Top Communities</h5>
+  <hr />
+  <ng-container *ngFor="let community of communities; let isLast = last">
+    <span class="subreddit-text"
+      ><a [routerLink]="['/community', community.communityId]">{{ community.name }}</a></span
+    >
+    <hr *ngIf="!isLast" />
+  </ng-container>
+  <hr />
+  <div>
+    <a style="font-weight: bold" routerLink="/list-communities">View all</a>
+  </div>
+</div>

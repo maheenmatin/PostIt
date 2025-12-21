@@ -1,13 +1,12 @@
 import { Component } from "@angular/core";
 import { FormGroup, FormControl, Validators, ReactiveFormsModule } from "@angular/forms";
 import { Router } from "@angular/router";
-import { throwError } from "rxjs";
-import { PostService } from "../../shared/post.service";
-import { SubredditService } from "../../subreddit/subreddit.service";
-import { SubredditModel } from "../../subreddit/subreddit-response";
-import { CreatePostPayload } from "./create-post.payload";
-import { EditorComponent, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
 import { CommonModule } from "@angular/common";
+import { EditorComponent, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
+import { PostService } from "../../shared/post.service";
+import { CommunityService } from "../../community/community.service";
+import { CommunityModel } from "../../community/community.model";
+import { CreatePostPayload } from "./create-post.payload";
 
 @Component({
   selector: "app-create-post",
@@ -18,9 +17,19 @@ import { CommonModule } from "@angular/common";
   styleUrl: "./create-post.component.css",
 })
 export class CreatePostComponent {
-  createPostForm!: FormGroup;
-  postPayload: CreatePostPayload;
-  subreddits!: Array<SubredditModel>;
+  createPostForm = new FormGroup({
+    postName: new FormControl("", Validators.required),
+    communityName: new FormControl("", Validators.required),
+    url: new FormControl("", Validators.required),
+    description: new FormControl("", Validators.required),
+  });
+  postPayload: CreatePostPayload = {
+    postName: "",
+    url: "",
+    description: "",
+    communityName: "",
+  };
+  communities: Array<CommunityModel> = [];
 
   init: EditorComponent["init"] = {
     license_key: "gpl",
@@ -47,54 +56,45 @@ export class CreatePostComponent {
       "wordcount",
     ],
     toolbar:
-      "undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help",
+      "undo redo | formatselect | bold italic backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | help",
     base_url: "/tinymce",
     suffix: ".min",
     branding: false,
   };
 
-  constructor(private router: Router, private postService: PostService, private subredditService: SubredditService) {
-    this.postPayload = {
-      postName: "",
-      url: "",
-      description: "",
-      subredditName: "",
-    };
-  }
+  constructor(private router: Router, private postService: PostService, private communityService: CommunityService) {}
 
   ngOnInit() {
-    this.createPostForm = new FormGroup({
-      postName: new FormControl("", Validators.required),
-      subredditName: new FormControl("", Validators.required),
-      url: new FormControl("", Validators.required),
-      description: new FormControl("", Validators.required),
-    });
-    this.subredditService.getAllSubreddits().subscribe(
-      (data) => {
-        this.subreddits = data;
+    // Populate the community dropdown for post creation.
+    this.communityService.getAllCommunities().subscribe({
+      next: (data) => {
+        this.communities = data;
       },
-      (error) => {
-        throwError(error);
-      }
-    );
+      error: (error) => console.error("Error loading communities", error),
+    });
   }
 
   createPost() {
-    this.postPayload.postName = this.createPostForm.get("postName")!.value;
-    this.postPayload.subredditName = this.createPostForm.get("subredditName")!.value;
-    this.postPayload.url = this.createPostForm.get("url")!.value;
-    this.postPayload.description = this.createPostForm.get("description")!.value;
+    // Validate form fields before constructing payload.
+    const { postName, communityName, url, description } = this.createPostForm.value;
+    if (!postName || !communityName || !url || !description) {
+      return;
+    }
 
-    this.postService.createPost(this.postPayload).subscribe(
-      (data) => {
+    this.postPayload = {
+      postName,
+      communityName,
+      url,
+      description,
+    };
+
+    this.postService.createPost(this.postPayload).subscribe({
+      next: () => {
+        // Return to the feed after successful creation.
         this.router.navigateByUrl("/");
       },
-      (error) => {
-        throwError(error);
-      }
-    );
+      error: (error) => console.error("Error creating post", error),
+    });
   }
 
   discardPost() {

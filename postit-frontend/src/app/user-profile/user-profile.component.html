@@ -7,13 +7,13 @@
   </div>
   <hr />
   <div class="fs-3">Your Posts</div>
-  <app-post-tile></app-post-tile>
+  <app-post-tile [posts]="posts" [useProvidedPosts]="true"></app-post-tile>
   <hr />
   <div class="fs-3 mb-3">Your Comments</div>
   <div *ngFor="let comment of comments">
     <div class="comment">
       <div class="username">
-        <a routerLink="/user/comment.username">{{ comment.userName }}</a>
+        <a [routerLink]="['/user-profile', comment.userName]">{{ comment.userName }}</a>
       </div>
       <div>
         <p>{{ comment.createdDate }}</p>

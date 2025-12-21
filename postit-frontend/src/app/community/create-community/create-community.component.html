@@ -1,27 +1,26 @@
 <div class="container">
   <div class="row">
-    <div class="create-subreddit-container">
-      <form class="post-form" [formGroup]="createSubredditForm" (ngSubmit)="createSubreddit()">
+    <div class="create-community-container">
+      <form class="post-form" [formGroup]="createCommunityForm" (ngSubmit)="createCommunity()">
         <div class="form-group">
-          <div class="create-subreddit-heading">Create Subreddit</div>
+          <div class="create-community-heading">Create Community</div>
           <hr />
           <input
             type="text"
-            [formControlName]="'title'"
+            formControlName="name"
             class="form-control"
             style="margin-top: 5px"
-            placeholder="Title"
+            placeholder="Community name"
           />
           <textarea
-            type="text"
-            [formControlName]="'description'"
-            style="width: 100%; margin-top: 5px; min-height: 150px;"
+            formControlName="description"
+            style="width: 100%; margin-top: 5px; min-height: 150px"
             placeholder="Description"
           ></textarea>
           <div>
             <div style="margin-top: 5px" class="float-right">
-              <button (click)="discard()" class="btnDiscard">Discard</button>
-              <button class="btnCreateSubreddit">Create</button>
+              <button type="button" (click)="discardCommunity()" class="btnDiscard">Discard</button>
+              <button class="btnCreateCommunity">Create</button>
             </div>
           </div>
         </div>
@@ -35,7 +34,7 @@
       <ul>
         <li>Please be nice to others</li>
         <hr />
-        <li>Post according to subreddit rules</li>
+        <li>Post according to community rules</li>
         <hr />
         <li>Do NOT post illegal content!</li>
         <hr />
