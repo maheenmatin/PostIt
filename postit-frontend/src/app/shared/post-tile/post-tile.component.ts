@@ -84,4 +84,9 @@ export class PostTileComponent implements OnInit, OnChanges {
     }
     return ["/community", communityId];
   }
+
+  commentLabel(count: number): string {
+    const normalized = Number(count) || 0;
+    return `${normalized} ${normalized === 1 ? "comment" : "comments"}`;
+  }
 }

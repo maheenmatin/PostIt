@@ -29,9 +29,9 @@
         <div class="post-actions">
           <p class="post-comment">
             <fa-icon [icon]="faComments"></fa-icon>
-            Comments({{ post.commentCount }})
+            {{ commentLabel(post.commentCount) }}
           </p>
-          <button class="login" (click)="goToPost(post.postId)">Read post</button>
+          <button class="login read-post-button" (click)="goToPost(post.postId)">Read post</button>
         </div>
       </div>
     </div>
