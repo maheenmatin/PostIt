@@ -1,9 +1,6 @@
 <div>
-  <div class="row post" *ngFor="let post of postsFiltered">
-    <div class="col-md-1">
-      <app-vote-button [post]="post"></app-vote-button>
-    </div>
-    <div class="col-md-11">
+  <div class="post" *ngFor="let post of postsFiltered">
+    <div class="post-meta">
       <span class="subreddit-info">
         <span class="subreddit-text">
           <a class="posturl" *ngIf="communityRoute(post.communityName)" [routerLink]="communityRoute(post.communityName)"
@@ -18,18 +15,28 @@
           <a class="username" [routerLink]="['/user-profile', post.userName]">{{ post.userName }}</a>
         </span>
       </span>
-      <hr />
-      <a [routerLink]="['/view-post', post.postId]" class="post-title">{{ post.postName }}</a>
-      <div>
-        <p class="post-text" [innerHtml]="post.description"></p>
+    </div>
+    <hr class="post-divider" />
+    <div class="post-body row">
+      <div class="col-md-1 vote-column">
+        <app-vote-button [post]="post"></app-vote-button>
       </div>
-      <div>
-        <p class="post-comment">
-          <fa-icon [icon]="faComments"></fa-icon>
-          Comments({{ post.commentCount }})
-        </p>
-        <button class="login" (click)="goToPost(post.postId)">Read post</button>
+      <div class="col-md-11 post-content">
+        <a [routerLink]="['/view-post', post.postId]" class="post-title">{{ post.postName }}</a>
+        <div>
+          <p class="post-text" [innerHtml]="post.description"></p>
+        </div>
+        <div class="post-actions">
+          <p class="post-comment">
+            <fa-icon [icon]="faComments"></fa-icon>
+            Comments({{ post.commentCount }})
+          </p>
+          <button class="login" (click)="goToPost(post.postId)">Read post</button>
+        </div>
       </div>
     </div>
+  </div>
+  <div class="empty-state" *ngIf="postsFiltered.length === 0">
+    No posts yet!
   </div>
 </div>
