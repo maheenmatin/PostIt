@@ -58,6 +58,14 @@
   .post .col-md-1,
   .post .col-md-11 {
     max-width: 100%;
-    flex: 0 0 100%;
+  }
+
+  .post .col-md-1 {
+    flex: 0 0 48px;
+    max-width: 48px;
+  }
+
+  .post .col-md-11 {
+    flex: 1 1 auto;
   }
 }

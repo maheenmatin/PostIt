@@ -3,5 +3,5 @@
     <h1 class="community-title">{{ community?.name }}</h1>
     <p class="community-description">{{ community?.description }}</p>
   </div>
-  <app-post-tile [posts]="posts" [disableCommunityFilter]="true"></app-post-tile>
+  <app-post-tile [posts]="posts" [disableCommunityFilter]="true" [useProvidedPosts]="true"></app-post-tile>
 </div>
