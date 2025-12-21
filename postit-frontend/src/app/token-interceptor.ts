@@ -1,61 +1,71 @@
 import { HttpInterceptorFn, HttpRequest, HttpHandlerFn, HttpErrorResponse } from "@angular/common/http";
 import { Observable, BehaviorSubject, throwError } from "rxjs";
-import { catchError, switchMap, take, filter } from "rxjs/operators";
+import { catchError, finalize, switchMap, take, filter } from "rxjs/operators";
 import { AuthService } from "./auth/shared/auth.service";
 import { inject } from "@angular/core";
 import { LoginResponse } from "./auth/login/login-response.payload";
 
+let isTokenRefreshing = false;
+const refreshTokenSubject = new BehaviorSubject<string | null>(null);
+
 export const TokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<any> => {
   const authService = inject(AuthService);
-  const isTokenRefreshing = new BehaviorSubject<boolean>(false);
-  const refreshTokenSubject = new BehaviorSubject<any>(null);
 
-  if (req.url.indexOf("refresh") !== -1 || req.url.indexOf("login") !== -1) {
+  const skipAuthPaths = [
+    "/api/auth/login",
+    "/api/auth/refresh/token",
+    "/api/auth/signup",
+    "/api/auth/logout",
+    "/api/auth/accountVerification",
+  ];
+
+  if (skipAuthPaths.some((path) => req.url.includes(path))) {
     return next(req);
   }
 
   const jwtToken = authService.getJwtToken();
+  const authReq = jwtToken ? addToken(req, jwtToken) : req;
 
-  if (jwtToken) {
-    return next(addToken(req, jwtToken)).pipe(
-      catchError((error) => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
-          return handleAuthErrors(req, next, authService, isTokenRefreshing, refreshTokenSubject);
-        } else {
-          return throwError(() => error);
-        }
-      })
-    );
-  }
-
-  return next(req);
+  return next(authReq).pipe(
+    catchError((error) => {
+      if (error instanceof HttpErrorResponse && (error.status === 401 || error.status === 403)) {
+        return handleAuthErrors(authReq, next, authService);
+      }
+      return throwError(() => error);
+    })
+  );
 };
 
-function handleAuthErrors(
-  req: HttpRequest<any>,
-  next: HttpHandlerFn,
-  authService: AuthService,
-  isTokenRefreshing: BehaviorSubject<boolean>,
-  refreshTokenSubject: BehaviorSubject<any>
-): Observable<any> {
-  if (!isTokenRefreshing.value) {
-    isTokenRefreshing.next(true);
+function handleAuthErrors(req: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService): Observable<any> {
+  if (!authService.getRefreshToken()) {
+    authService.logout();
+    return throwError(() => new Error("No refresh token available"));
+  }
+
+  if (!isTokenRefreshing) {
+    isTokenRefreshing = true;
     refreshTokenSubject.next(null);
 
     return authService.refreshToken().pipe(
       switchMap((refreshTokenResponse: LoginResponse) => {
-        isTokenRefreshing.next(false);
         refreshTokenSubject.next(refreshTokenResponse.authenticationToken);
         return next(addToken(req, refreshTokenResponse.authenticationToken));
+      }),
+      catchError((error) => {
+        authService.logout();
+        return throwError(() => error);
+      }),
+      finalize(() => {
+        isTokenRefreshing = false;
       })
     );
-  } else {
-    return refreshTokenSubject.pipe(
-      filter((result) => result !== null),
-      take(1),
-      switchMap((res) => next(addToken(req, authService.getJwtToken())))
-    );
   }
+
+  return refreshTokenSubject.pipe(
+    filter((token): token is string => token !== null),
+    take(1),
+    switchMap((token) => next(addToken(req, token)))
+  );
 }
 
 function addToken(req: HttpRequest<any>, jwtToken: string) {
