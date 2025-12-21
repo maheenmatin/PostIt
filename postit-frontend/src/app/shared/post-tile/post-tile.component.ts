@@ -16,8 +16,11 @@ import { PostService } from "../post.service";
   styleUrl: "./post-tile.component.css",
 })
 export class PostTileComponent implements OnInit, OnChanges {
+  // Optional posts list for parent-provided feeds (community/profile).
   @Input() posts: PostModel[] = [];
+  // Skip filtering when parent already scoped the list.
   @Input() disableCommunityFilter = false;
+  // Avoid auto-loading all posts if parent passed data.
   @Input() useProvidedPosts = false;
   faComments = faComments;
   postsFiltered: PostModel[] = [];
@@ -26,6 +29,7 @@ export class PostTileComponent implements OnInit, OnChanges {
   constructor(private router: Router, private postService: PostService, private communityService: CommunityService) {}
 
   ngOnInit() {
+    // Preload community name → id lookups for router links.
     this.communityService.getAllCommunities().subscribe({
       next: (communities) => {
         this.communityIdByName = communities.reduce<Record<string, number>>((acc, community) => {
@@ -38,6 +42,7 @@ export class PostTileComponent implements OnInit, OnChanges {
       error: (error) => console.error("Error loading communities", error),
     });
 
+    // Load the feed only when not receiving posts from a parent component.
     if (!this.useProvidedPosts && this.posts.length === 0) {
       this.loadPosts();
     } else {
@@ -52,6 +57,7 @@ export class PostTileComponent implements OnInit, OnChanges {
   }
 
   private loadPosts() {
+    // Default feed for the home page.
     this.postService.getAllPosts().subscribe({
       next: (posts) => {
         this.posts = posts;
@@ -62,6 +68,7 @@ export class PostTileComponent implements OnInit, OnChanges {
   }
 
   private applyCommunityFilter(): void {
+    // Apply stored selection only when the parent hasn't pre-filtered.
     if (this.disableCommunityFilter) {
       this.postsFiltered = this.posts;
       return;
@@ -77,6 +84,7 @@ export class PostTileComponent implements OnInit, OnChanges {
     this.router.navigateByUrl("/view-post/" + id);
   }
 
+  // Build router link to community detail from a community name.
   communityRoute(name: string): Array<string | number> | null {
     const communityId = this.communityIdByName[name];
     if (!communityId) {
@@ -85,6 +93,7 @@ export class PostTileComponent implements OnInit, OnChanges {
     return ["/community", communityId];
   }
 
+  // Render a pluralized comment label for the UI.
   commentLabel(count: number): string {
     const normalized = Number(count) || 0;
     return `${normalized} ${normalized === 1 ? "comment" : "comments"}`;

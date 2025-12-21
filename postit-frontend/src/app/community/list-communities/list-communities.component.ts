@@ -19,6 +19,7 @@ export class ListCommunitiesComponent {
   constructor(private communityService: CommunityService) {}
 
   ngOnInit(): void {
+    // Load the full community list for the directory view.
     this.communityService.getAllCommunities().subscribe({
       next: (data) => {
         this.communities = data;

@@ -25,6 +25,7 @@ export class CreateCommunityComponent {
   constructor(private router: Router, private communityService: CommunityService) {}
 
   createCommunity() {
+    // Guard required fields and submit creation request.
     const { name, description } = this.createCommunityForm.value;
     if (!name || !description) {
       return;
@@ -42,6 +43,7 @@ export class CreateCommunityComponent {
   }
 
   discardCommunity() {
+    // Return to the home page without saving.
     this.router.navigateByUrl("/");
   }
 }

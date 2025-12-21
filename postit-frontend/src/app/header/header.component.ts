@@ -19,6 +19,7 @@ export class HeaderComponent {
   constructor(private authService: AuthService, private router: Router, private communityService: CommunityService) {}
 
   ngOnInit() {
+    // Track login state and username for the account dropdown.
     this.authService.loggedIn.subscribe((data: boolean) => (this.isLoggedIn = data));
     this.authService.username.subscribe((data: string) => (this.username = data));
     this.isLoggedIn = this.authService.isLoggedIn();
@@ -26,12 +27,14 @@ export class HeaderComponent {
   }
 
   logout() {
+    // Delegate logout to the auth service.
     this.authService.logout();
     this.isLoggedIn = false;
     this.router.navigateByUrl("");
   }
 
   filterCommunity(): void {
+    // Reset any community filtering when returning home.
     this.communityService.setSelectedCommunity(undefined);
   }
 }

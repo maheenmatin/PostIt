@@ -26,8 +26,10 @@ export class UserProfileComponent {
     private postService: PostService,
     private commentService: CommentService
   ) {
+    // Pull the username from the route to load profile data.
     this.name = this.activatedRoute.snapshot.params["name"];
 
+    // Load post history for the user.
     this.postService.getPostsByUser(this.name).subscribe({
       next: (data) => {
         this.posts = data;
@@ -36,6 +38,7 @@ export class UserProfileComponent {
       error: (error) => console.error("Error loading posts", error),
     });
 
+    // Load comment history for the user.
     this.commentService.getAllCommentsByUser(this.name).subscribe({
       next: (data) => {
         this.comments = data.map((comment) => ({
