@@ -1,44 +1,41 @@
-<div class="container">
+<div class="container page-shell">
   <div class="row">
-    <div class="create-community-container">
-      <form class="post-form" [formGroup]="createCommunityForm" (ngSubmit)="createCommunity()">
-        <div class="form-group">
-          <div class="create-community-heading">Create Community</div>
-          <hr />
-          <input
-            type="text"
-            formControlName="name"
-            class="form-control"
-            style="margin-top: 5px"
-            placeholder="Community name"
-          />
-          <textarea
-            formControlName="description"
-            style="width: 100%; margin-top: 5px; min-height: 150px"
-            placeholder="Description"
-          ></textarea>
+    <div class="col-lg-8">
+      <div class="create-community-container">
+        <div class="create-community-header">
           <div>
-            <div style="margin-top: 5px" class="float-right">
-              <button type="button" (click)="discardCommunity()" class="btnDiscard">Discard</button>
-              <button class="btnCreateCommunity">Create</button>
-            </div>
+            <div class="create-community-heading">Create Community</div>
+            <p class="create-community-subtitle">Set the vibe and invite others to join the discussion.</p>
           </div>
         </div>
-      </form>
+        <form class="post-form" [formGroup]="createCommunityForm" (ngSubmit)="createCommunity()">
+          <div class="form-group">
+            <label class="form-label">Community name</label>
+            <input type="text" formControlName="name" class="form-control" placeholder="Community name" />
+            <label class="form-label">Description</label>
+            <textarea
+              formControlName="description"
+              class="form-control community-description"
+              placeholder="Describe what this community is about"
+            ></textarea>
+            <div class="form-actions">
+              <button type="button" (click)="discardCommunity()" class="btnDiscard">Discard</button>
+              <button class="btnCreateCommunity" type="submit">Create</button>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="sidebar col-md-3">
-      <h5 class="guidelines">Posting to PostIt...</h5>
-      <hr />
-      <ul>
-        <li>Please be nice to others</li>
-        <hr />
-        <li>Post according to community rules</li>
-        <hr />
-        <li>Do NOT post illegal content!</li>
-        <hr />
-      </ul>
+    <div class="col-lg-4">
+      <div class="sidebar">
+        <h5 class="guidelines">Posting to PostIt...</h5>
+        <p class="guidelines-subtitle">A few quick reminders before you start.</p>
+        <ul class="guidelines-list">
+          <li>Please be nice to others</li>
+          <li>Post according to community rules</li>
+          <li>Do NOT post illegal content!</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

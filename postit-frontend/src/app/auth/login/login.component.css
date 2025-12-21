@@ -1,21 +1,80 @@
-.login-section {
-  margin: 100px;
+.auth-shell {
+  padding: 60px 16px 80px;
 }
 
-.login-failed,
-.register-success {
-  text-align: center;
-  margin: auto;
-  margin-top: 10px;
-  border: 2px solid black;
-  width: 65%;
-  background-color: red;
+.auth-card {
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  box-shadow: 0 14px 28px rgba(15, 23, 42, 0.1);
+  padding: 24px;
 }
 
-.login-failed-text,
-.register-success-text {
-  text-align: center;
-  margin-top: 5px;
-  font-weight: bold;
-  color: aliceblue;
+.auth-card-header h4 {
+  margin: 0 0 6px;
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.auth-card-header p {
+  margin: 0 0 16px;
+  color: #6b7280;
+  font-size: 13px;
+}
+
+.form-label {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #374151;
+  font-size: 13px;
+}
+
+.form-control {
+  margin-top: 6px;
+  border-radius: 8px;
+  border-color: #d1d5db;
+}
+
+.form-control:focus {
+  border-color: #60a5fa;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.25);
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.login {
+  width: 100%;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+
+.auth-switch {
+  font-size: 13px;
+  color: #475569;
+}
+
+.auth-banner {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid transparent;
+}
+
+.auth-banner.error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fecaca;
+}
+
+.auth-banner.success {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #bbf7d0;
 }
