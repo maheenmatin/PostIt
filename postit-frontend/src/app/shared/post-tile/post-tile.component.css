@@ -1,14 +1,14 @@
 .post {
-  --post-line-color: #ccc;
-  border: 1px solid #ccc;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  border: 1px solid #e3e7ef;
+  margin-top: 16px;
+  margin-bottom: 16px;
   overflow: hidden;
-  background-color: rgb(255, 255, 255);
-  color: #878a8c;
+  background-color: #ffffff;
+  color: #4a5568;
   position: relative;
-  border-radius: 4px;
-  padding: 5px;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .btnCommments {
@@ -18,20 +18,38 @@
 }
 
 .post-title {
-  font-size: 28px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
   opacity: 1;
+  color: #1f2330;
 }
 
 .posturl,
 .postname {
-  color: black;
+  color: #2563eb;
 }
 
 .subreddit-text {
-  font-weight: bold;
+  font-weight: 600;
 }
 
 .post-text {
-  margin-top: 10px;
+  margin-top: 12px;
+  color: #3b4252;
+}
+
+@media (max-width: 768px) {
+  .post {
+    padding: 12px;
+  }
+
+  .post-title {
+    font-size: 20px;
+  }
+
+  .post .col-md-1,
+  .post .col-md-11 {
+    max-width: 100%;
+    flex: 0 0 100%;
+  }
 }

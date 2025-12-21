@@ -8,9 +8,15 @@
       </div>
       <div class="col-md-11">
         <span>
-          <span class="subreddit-text"
-            ><a class="post-url" href="">{{ post.communityName }}</a></span
-          >
+          <span class="subreddit-text">
+            <a
+              *ngIf="communityRoute(post.communityName)"
+              class="post-url"
+              [routerLink]="communityRoute(post.communityName)"
+              >{{ post.communityName }}</a
+            >
+            <span *ngIf="!communityRoute(post.communityName)" class="post-url">{{ post.communityName }}</span>
+          </span>
           <span>
             . Posted
             <span> {{ post.duration }} </span>

@@ -20,10 +20,23 @@ export class PostTileComponent implements OnInit, OnChanges {
   @Input() disableCommunityFilter = false;
   faComments = faComments;
   postsFiltered: PostModel[] = [];
+  communityIdByName: Record<string, number> = {};
 
   constructor(private router: Router, private postService: PostService, private communityService: CommunityService) {}
 
   ngOnInit() {
+    this.communityService.getAllCommunities().subscribe({
+      next: (communities) => {
+        this.communityIdByName = communities.reduce<Record<string, number>>((acc, community) => {
+          if (community.communityId) {
+            acc[community.name] = community.communityId;
+          }
+          return acc;
+        }, {});
+      },
+      error: (error) => console.error("Error loading communities", error),
+    });
+
     if (this.posts.length === 0) {
       this.loadPosts();
     } else {
@@ -61,5 +74,13 @@ export class PostTileComponent implements OnInit, OnChanges {
 
   goToPost(id: number): void {
     this.router.navigateByUrl("/view-post/" + id);
+  }
+
+  communityRoute(name: string): Array<string | number> | null {
+    const communityId = this.communityIdByName[name];
+    if (!communityId) {
+      return null;
+    }
+    return ["/community", communityId];
   }
 }

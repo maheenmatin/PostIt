@@ -9,6 +9,7 @@ import { CommentService } from "../../comment/comment.service";
 import { CommunitySideBarComponent } from "../../shared/community-side-bar/community-side-bar.component";
 import { SideBarComponent } from "../../shared/side-bar/side-bar.component";
 import { VoteButtonComponent } from "../../shared/vote-button/vote-button.component";
+import { CommunityService } from "../../community/community.service";
 
 @Component({
   selector: "app-view-post",
@@ -30,11 +31,13 @@ export class ViewPostComponent {
   commentForm: FormGroup;
   commentPayload: CommentPayload;
   comments: CommentPayload[] = [];
+  communityIdByName: Record<string, number> = {};
 
   constructor(
     private postService: PostService,
     private activateRoute: ActivatedRoute,
-    private commentService: CommentService
+    private commentService: CommentService,
+    private communityService: CommunityService
   ) {
     this.postId = this.activateRoute.snapshot.params["id"];
 
@@ -48,6 +51,18 @@ export class ViewPostComponent {
   }
 
   ngOnInit(): void {
+    this.communityService.getAllCommunities().subscribe({
+      next: (communities) => {
+        this.communityIdByName = communities.reduce<Record<string, number>>((acc, community) => {
+          if (community.communityId) {
+            acc[community.name] = community.communityId;
+          }
+          return acc;
+        }, {});
+      },
+      error: (error) => console.error("Error loading communities", error),
+    });
+
     this.getPostById();
     this.getCommentsForPost();
   }
@@ -100,5 +115,13 @@ export class ViewPostComponent {
       dateStyle: "short",
       timeStyle: "short",
     }).format(date);
+  }
+
+  communityRoute(name: string): Array<string | number> | null {
+    const communityId = this.communityIdByName[name];
+    if (!communityId) {
+      return null;
+    }
+    return ["/community", communityId];
   }
 }
