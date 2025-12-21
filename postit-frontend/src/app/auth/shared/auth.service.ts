@@ -42,9 +42,9 @@ export class AuthService {
 
   // Clear auth state and notify listeners.
   logout() {
-    this.httpClient
-      .post(`${API_ENDPOINTS.auth}/logout`, this.createRefreshTokenPayload(), { responseType: "text" })
-      .subscribe({
+    const refreshPayload = this.createRefreshTokenPayload();
+    if (refreshPayload.refreshToken) {
+      this.httpClient.post(`${API_ENDPOINTS.auth}/logout`, refreshPayload, { responseType: "text" }).subscribe({
         next: (data) => {
           console.log(data);
         },
@@ -52,6 +52,7 @@ export class AuthService {
           console.error("Logout failed", error);
         },
       });
+    }
     this.localStorage.clear("authenticationToken");
     this.localStorage.clear("username");
     this.localStorage.clear("refreshToken");
@@ -60,7 +61,7 @@ export class AuthService {
     this.localStorage.store("loggedIn", "false");
     this.loggedIn.emit(false);
 
-    this.router.navigateByUrl("").then(() => window.location.reload());
+    this.router.navigateByUrl("/login");
   }
 
   // Refresh JWT using the stored refresh token.
