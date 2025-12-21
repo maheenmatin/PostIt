@@ -91,6 +91,8 @@ header {
 
 .dropdown-menu {
   background-color: #f8f9fa;
+  left: auto;
+  right: 0;
 }
 
 .account-icon {

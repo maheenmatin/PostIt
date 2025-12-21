@@ -13,7 +13,7 @@
 
 .post-meta {
   font-size: 14px;
-  padding-left: 16px;
+  padding-left: 0;
 }
 
 .post-divider {
@@ -30,6 +30,13 @@
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
+}
+
+.post-comment {
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .read-post-button {
@@ -105,6 +112,6 @@
   }
 
   .post-meta {
-    padding-left: 12px;
+    padding-left: 0;
   }
 }
