@@ -49,10 +49,11 @@
 }
 
 #space-image {
-  height: 82px;
+  height: 180px;
   width: 100%;
   object-fit: cover;
-  object-position: center 57%;
+  object-position: center 65%;
+  border-radius: 10px;
 }
 
 @media (max-width: 768px) {
