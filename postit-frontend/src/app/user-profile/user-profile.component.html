@@ -7,7 +7,7 @@
   </div>
   <hr />
   <div class="fs-3">Your Posts</div>
-  <app-post-tile [posts]="posts"></app-post-tile>
+  <app-post-tile [posts]="posts" [useProvidedPosts]="true"></app-post-tile>
   <hr />
   <div class="fs-3 mb-3">Your Comments</div>
   <div *ngFor="let comment of comments">

@@ -18,6 +18,7 @@ import { PostService } from "../post.service";
 export class PostTileComponent implements OnInit, OnChanges {
   @Input() posts: PostModel[] = [];
   @Input() disableCommunityFilter = false;
+  @Input() useProvidedPosts = false;
   faComments = faComments;
   postsFiltered: PostModel[] = [];
   communityIdByName: Record<string, number> = {};
@@ -37,7 +38,7 @@ export class PostTileComponent implements OnInit, OnChanges {
       error: (error) => console.error("Error loading communities", error),
     });
 
-    if (this.posts.length === 0) {
+    if (!this.useProvidedPosts && this.posts.length === 0) {
       this.loadPosts();
     } else {
       this.applyCommunityFilter();
