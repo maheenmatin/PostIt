@@ -1,44 +1,53 @@
-<div class="container">
-  <div class="row">
-    <div class="create-community-container">
-      <form class="post-form" [formGroup]="createCommunityForm" (ngSubmit)="createCommunity()">
-        <div class="form-group">
-          <div class="create-community-heading">Create Community</div>
-          <hr />
-          <input
-            type="text"
-            formControlName="name"
-            class="form-control"
-            style="margin-top: 5px"
-            placeholder="Community name"
-          />
-          <textarea
-            formControlName="description"
-            style="width: 100%; margin-top: 5px; min-height: 150px"
-            placeholder="Description"
-          ></textarea>
+<div class="container create-community-page">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="create-community-container">
+        <div class="create-community-header">
           <div>
-            <div style="margin-top: 5px" class="float-right">
-              <button type="button" (click)="discardCommunity()" class="btnDiscard">Discard</button>
-              <button class="btnCreateCommunity">Create</button>
-            </div>
+            <h2>Create Community</h2>
+            <p>Start a space for people to gather around a shared interest.</p>
           </div>
         </div>
-      </form>
+        <form class="post-form" [formGroup]="createCommunityForm" (ngSubmit)="createCommunity()">
+          <div class="form-group">
+            <label class="form-label" for="community-name">Community name</label>
+            <input
+              id="community-name"
+              type="text"
+              formControlName="name"
+              class="form-control"
+              placeholder="Add a unique community name"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="community-description">Description</label>
+            <textarea
+              id="community-description"
+              formControlName="description"
+              class="form-control description-area"
+              placeholder="Describe what people can expect here"
+            ></textarea>
+          </div>
+          <div class="form-footer">
+            <button type="button" (click)="discardCommunity()" class="btnDiscard">Discard</button>
+            <button class="btnCreateCommunity">Create</button>
+          </div>
+        </form>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="sidebar col-md-3">
-      <h5 class="guidelines">Posting to PostIt...</h5>
-      <hr />
-      <ul>
-        <li>Please be nice to others</li>
+    <div class="col-lg-4">
+      <div class="sidebar">
+        <h5 class="guidelines">Posting to PostIt...</h5>
         <hr />
-        <li>Post according to community rules</li>
-        <hr />
-        <li>Do NOT post illegal content!</li>
-        <hr />
-      </ul>
+        <ul>
+          <li>Please be nice to others</li>
+          <hr />
+          <li>Post according to community rules</li>
+          <hr />
+          <li>Do NOT post illegal content!</li>
+          <hr />
+        </ul>
+      </div>
     </div>
   </div>
 </div>
