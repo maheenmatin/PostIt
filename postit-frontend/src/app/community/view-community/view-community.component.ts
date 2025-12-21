@@ -24,15 +24,18 @@ export class ViewCommunityComponent {
     private communityService: CommunityService,
     private postService: PostService
   ) {
+    // Route param is required for community lookup.
     this.communityId = Number(this.activatedRoute.snapshot.params["id"]);
   }
 
   ngOnInit(): void {
+    // Load both community metadata and its scoped posts.
     this.loadCommunity();
     this.loadPosts();
   }
 
   private loadCommunity(): void {
+    // Fetch details for the community header.
     this.communityService.getCommunity(this.communityId).subscribe({
       next: (community) => {
         this.community = community;
@@ -42,6 +45,7 @@ export class ViewCommunityComponent {
   }
 
   private loadPosts(): void {
+    // Fetch posts scoped to the selected community.
     this.postService.getPostsByCommunity(this.communityId).subscribe({
       next: (posts) => {
         this.posts = posts;

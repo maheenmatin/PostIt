@@ -15,6 +15,7 @@ export class CommunitySideBarComponent {
   communities: Array<CommunityModel> = [];
 
   constructor(private communityService: CommunityService) {
+    // Pull a small list of communities to highlight on the sidebar.
     this.communityService.getAllCommunities().subscribe({
       next: (data) => {
         this.communities = data.length > 3 ? data.slice(0, 3) : data;

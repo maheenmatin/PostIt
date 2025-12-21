@@ -39,6 +39,7 @@ export class ViewPostComponent {
     private commentService: CommentService,
     private communityService: CommunityService
   ) {
+    // Resolve post id from route for initial data fetch.
     this.postId = this.activateRoute.snapshot.params["id"];
 
     this.commentForm = new FormGroup({
@@ -51,6 +52,7 @@ export class ViewPostComponent {
   }
 
   ngOnInit(): void {
+    // Load community lookup map and post/comments for the page.
     this.communityService.getAllCommunities().subscribe({
       next: (communities) => {
         this.communityIdByName = communities.reduce<Record<string, number>>((acc, community) => {
@@ -68,6 +70,7 @@ export class ViewPostComponent {
   }
 
   postComment() {
+    // Guard empty submissions and refresh list on success.
     const { text } = this.commentForm.value;
     if (!text) {
       return;
@@ -84,6 +87,7 @@ export class ViewPostComponent {
   }
 
   private getPostById() {
+    // Pull post detail for the header/metadata block.
     this.postService.getPost(this.postId).subscribe({
       next: (data) => {
         this.post = data;
@@ -93,6 +97,7 @@ export class ViewPostComponent {
   }
 
   private getCommentsForPost() {
+    // Load comments and format timestamps for display.
     this.commentService.getAllCommentsForPost(this.postId).subscribe({
       next: (data) => {
         this.comments = data.map((comment) => ({
@@ -105,6 +110,7 @@ export class ViewPostComponent {
   }
 
   private formatDate(dateInput: string): string {
+    // Normalize backend timestamp to a user-friendly string.
     const date = new Date(dateInput);
     if (Number.isNaN(date.getTime())) {
       return dateInput;

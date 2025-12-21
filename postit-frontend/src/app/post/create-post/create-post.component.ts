@@ -65,6 +65,7 @@ export class CreatePostComponent {
   constructor(private router: Router, private postService: PostService, private communityService: CommunityService) {}
 
   ngOnInit() {
+    // Populate the community dropdown for post creation.
     this.communityService.getAllCommunities().subscribe({
       next: (data) => {
         this.communities = data;
@@ -74,6 +75,7 @@ export class CreatePostComponent {
   }
 
   createPost() {
+    // Validate form fields before constructing payload.
     const { postName, communityName, url, description } = this.createPostForm.value;
     if (!postName || !communityName || !url || !description) {
       return;
@@ -88,6 +90,7 @@ export class CreatePostComponent {
 
     this.postService.createPost(this.postPayload).subscribe({
       next: () => {
+        // Return to the feed after successful creation.
         this.router.navigateByUrl("/");
       },
       error: (error) => console.error("Error creating post", error),

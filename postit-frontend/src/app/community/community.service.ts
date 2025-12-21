@@ -11,9 +11,11 @@ export class CommunityService {
   private selectedCommunity?: string;
 
   constructor(private http: HttpClient) {
+    // Persist the selection so the home feed can filter consistently.
     this.selectedCommunity = localStorage.getItem("selectedCommunity") || undefined;
   }
 
+  // Store/remove the selected community name for filtering.
   setSelectedCommunity(community: string | undefined) {
     this.selectedCommunity = community;
     if (community) {
@@ -28,14 +30,17 @@ export class CommunityService {
     return this.selectedCommunity;
   }
 
+  // Fetch all communities for lists and sidebars.
   getAllCommunities(): Observable<Array<CommunityModel>> {
     return this.http.get<Array<CommunityModel>>(API_ENDPOINTS.community);
   }
 
+  // Create a community from the form data.
   createCommunity(community: CommunityModel): Observable<CommunityModel> {
     return this.http.post<CommunityModel>(API_ENDPOINTS.community, community);
   }
 
+  // Fetch a single community by id for the detail page.
   getCommunity(id: number): Observable<CommunityModel> {
     return this.http.get<CommunityModel>(`${API_ENDPOINTS.community}/${id}`);
   }

@@ -37,6 +37,7 @@ export class LoginComponent {
   }
 
   ngOnInit() {
+    // Display activation notice after signup redirect.
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params["registered"] !== undefined && params["registered"] === "true") {
         this.registerSuccessMessage =
@@ -46,6 +47,7 @@ export class LoginComponent {
   }
 
   login() {
+    // Build payload from the form and attempt authentication.
     this.loginRequestPayload.username = this.loginForm.get("username")?.value;
     this.loginRequestPayload.password = this.loginForm.get("password")?.value;
 

@@ -10,6 +10,7 @@ import { VotePayload } from "./vote-button/vote-payload";
 export class VoteService {
   constructor(private http: HttpClient) {}
 
+  // Submit a vote for a post.
   vote(votePayload: VotePayload): Observable<void> {
     return this.http.post<void>(API_ENDPOINTS.votes, votePayload);
   }

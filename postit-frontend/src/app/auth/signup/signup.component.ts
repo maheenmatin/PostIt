@@ -30,15 +30,18 @@ export class SignupComponent {
   }
 
   signup() {
+    // Build payload from form values.
     this.signupRequestPayload.email = this.signupForm.get("email")?.value;
     this.signupRequestPayload.username = this.signupForm.get("username")?.value;
     this.signupRequestPayload.password = this.signupForm.get("password")?.value;
 
     this.authService.signup(this.signupRequestPayload).subscribe({
       next: () => {
+        // Redirect to login with a query param for the success banner.
         this.router.navigate(["/login"], { queryParams: { registered: "true" } });
       },
       error: (error) => {
+        // Attempt to detect duplicate username/email errors.
         const backendMessage = (error?.error?.message || error?.error?.error || "").toString().toLowerCase();
         const duplicateError =
           error?.status === 409 ||

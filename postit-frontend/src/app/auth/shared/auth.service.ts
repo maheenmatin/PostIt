@@ -17,12 +17,14 @@ export class AuthService {
 
   constructor(private httpClient: HttpClient, private localStorage: LocalStorageService, private router: Router) {}
 
+  // Register a new account.
   signup(signupRequestPayload: SignupRequestPayload): Observable<string> {
     return this.httpClient.post(`${API_ENDPOINTS.auth}/signup`, signupRequestPayload, {
       responseType: "text",
     });
   }
 
+  // Authenticate and cache JWT/refresh tokens locally.
   login(loginRequestPayload: LoginRequestPayload): Observable<boolean> {
     return this.httpClient.post<LoginResponse>(`${API_ENDPOINTS.auth}/login`, loginRequestPayload).pipe(
       map((data) => {
@@ -38,6 +40,7 @@ export class AuthService {
     );
   }
 
+  // Clear auth state and notify listeners.
   logout() {
     this.httpClient
       .post(`${API_ENDPOINTS.auth}/logout`, this.createRefreshTokenPayload(), { responseType: "text" })
@@ -60,6 +63,7 @@ export class AuthService {
     this.router.navigateByUrl("").then(() => window.location.reload());
   }
 
+  // Refresh JWT using the stored refresh token.
   refreshToken() {
     return this.httpClient
       .post<LoginResponse>(`${API_ENDPOINTS.auth}/refresh/token`, this.createRefreshTokenPayload())
@@ -74,6 +78,7 @@ export class AuthService {
       );
   }
 
+  // Helper payload for refresh/logout endpoints.
   createRefreshTokenPayload(): { refreshToken: string; username: string } {
     return {
       refreshToken: this.getRefreshToken(),
@@ -81,6 +86,7 @@ export class AuthService {
     };
   }
 
+  // Accessors for locally stored auth values.
   getJwtToken() {
     return this.localStorage.retrieve("authenticationToken");
   }
