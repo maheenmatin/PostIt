@@ -18,15 +18,25 @@ import { CreatePostPayload } from "./create-post.payload";
 })
 export class CreatePostComponent {
   createPostForm = new FormGroup({
-    postName: new FormControl("", [Validators.required, Validators.maxLength(255)]),
-    communityName: new FormControl("", Validators.required),
-    description: new FormControl("", Validators.required),
+    postName: new FormControl<string>("", {
+      nonNullable: true,
+      validators: [Validators.required, Validators.maxLength(255)],
+    }),
+    communityName: new FormControl<string>("", {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
+    description: new FormControl<string>("", {
+      nonNullable: true,
+      validators: [Validators.required],
+    }),
   });
+
   postPayload: CreatePostPayload = {
     postName: "",
     description: "",
-    communityName: "",
   };
+
   communities: Array<CommunityModel> = [];
 
   init: EditorComponent["init"] = {
@@ -78,12 +88,15 @@ export class CreatePostComponent {
       this.createPostForm.markAllAsTouched();
       return;
     }
-    const { postName, communityName, description } = this.createPostForm.value;
+
+    const { postName, communityName, description } = this.createPostForm.getRawValue();
 
     this.postPayload = {
       postName,
-      communityName,
       description,
+      // communityName is required by your form, but optional in the payload type.
+      // If you ever allow "no community selected", this prevents sending empty strings.
+      ...(communityName ? { communityName } : {}),
     };
 
     this.postService.createPost(this.postPayload).subscribe({
