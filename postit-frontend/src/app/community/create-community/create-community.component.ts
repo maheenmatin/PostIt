@@ -14,13 +14,9 @@ import { CommunityService } from "../community.service";
 })
 export class CreateCommunityComponent {
   createCommunityForm = new FormGroup({
-    name: new FormControl("", [Validators.required, Validators.maxLength(100)]),
-    description: new FormControl("", [Validators.required, Validators.maxLength(500)]),
+    name: new FormControl<string>("", { nonNullable: true, validators: [Validators.required, Validators.maxLength(100)] }),
+    description: new FormControl<string>("", { nonNullable: true, validators: [Validators.required, Validators.maxLength(500)] }),
   });
-  communityModel: CommunityModel = {
-    name: "",
-    description: "",
-  };
 
   constructor(private router: Router, private communityService: CommunityService) {}
 
@@ -30,14 +26,12 @@ export class CreateCommunityComponent {
       this.createCommunityForm.markAllAsTouched();
       return;
     }
-    const { name, description } = this.createCommunityForm.value;
 
-    this.communityModel = {
-      name,
-      description,
-    };
+    const { name, description } = this.createCommunityForm.getRawValue(); // both are string
 
-    this.communityService.createCommunity(this.communityModel).subscribe({
+    const communityModel: CommunityModel = { name, description };
+
+    this.communityService.createCommunity(communityModel).subscribe({
       next: () => this.router.navigateByUrl("/list-communities"),
       error: (error) => console.error("Error creating community", error),
     });
