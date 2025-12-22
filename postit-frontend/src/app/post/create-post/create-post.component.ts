@@ -20,12 +20,10 @@ export class CreatePostComponent {
   createPostForm = new FormGroup({
     postName: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     communityName: new FormControl("", Validators.required),
-    url: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     description: new FormControl("", Validators.required),
   });
   postPayload: CreatePostPayload = {
     postName: "",
-    url: "",
     description: "",
     communityName: "",
   };
@@ -80,12 +78,11 @@ export class CreatePostComponent {
       this.createPostForm.markAllAsTouched();
       return;
     }
-    const { postName, communityName, url, description } = this.createPostForm.value;
+    const { postName, communityName, description } = this.createPostForm.value;
 
     this.postPayload = {
       postName,
       communityName,
-      url,
       description,
     };
 

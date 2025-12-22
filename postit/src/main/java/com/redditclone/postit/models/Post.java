@@ -18,8 +18,6 @@ public class Post {
     @Column(nullable = false)
     private String postName;
 
-    private String url;
-
     @Column(columnDefinition = "TEXT")
     private String description;
 
