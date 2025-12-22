@@ -16,6 +16,7 @@
                 class="form-control"
                 [formControlName]="'username'"
                 name="user_name"
+                maxlength="50"
                 required
                 autofocus
               />
@@ -32,6 +33,7 @@
                 class="form-control"
                 [formControlName]="'password'"
                 name="password"
+                maxlength="255"
                 required
               />
               <span class="validation" *ngIf="!loginForm.get('password')?.valid && loginForm.get('password')?.touched">

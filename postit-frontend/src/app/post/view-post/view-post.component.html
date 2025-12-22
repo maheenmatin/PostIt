@@ -32,7 +32,12 @@
         <div class="post-comment">
           <form [formGroup]="commentForm" (ngSubmit)="postComment()">
             <div class="form-group">
-              <textarea class="form-control" formControlName="text" placeholder="Your thoughts?"></textarea>
+              <textarea
+                class="form-control"
+                formControlName="text"
+                placeholder="Your thoughts?"
+                maxlength="255"
+              ></textarea>
             </div>
             <button type="submit" class="login float-right">Comment</button>
           </form>

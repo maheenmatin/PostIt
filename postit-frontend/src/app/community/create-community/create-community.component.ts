@@ -14,8 +14,8 @@ import { CommunityService } from "../community.service";
 })
 export class CreateCommunityComponent {
   createCommunityForm = new FormGroup({
-    name: new FormControl("", Validators.required),
-    description: new FormControl("", Validators.required),
+    name: new FormControl("", [Validators.required, Validators.maxLength(100)]),
+    description: new FormControl("", [Validators.required, Validators.maxLength(500)]),
   });
   communityModel: CommunityModel = {
     name: "",
@@ -26,10 +26,11 @@ export class CreateCommunityComponent {
 
   createCommunity() {
     // Guard required fields and submit creation request.
-    const { name, description } = this.createCommunityForm.value;
-    if (!name || !description) {
+    if (this.createCommunityForm.invalid) {
+      this.createCommunityForm.markAllAsTouched();
       return;
     }
+    const { name, description } = this.createCommunityForm.value;
 
     this.communityModel = {
       name,

@@ -5,6 +5,7 @@ import com.redditclone.postit.dto.LoginRequest;
 import com.redditclone.postit.dto.RefreshTokenRequest;
 import com.redditclone.postit.dto.RegisterRequest;
 import com.redditclone.postit.exceptions.PostItException.PostItException;
+import com.redditclone.postit.exceptions.PostItException.SignupConflictException;
 import com.redditclone.postit.models.NotificationEmail;
 import com.redditclone.postit.models.User;
 import com.redditclone.postit.models.VerificationToken;
@@ -22,6 +23,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -36,6 +39,17 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
+        List<String> conflicts = new ArrayList<>();
+        if (userRepository.existsByUsername(registerRequest.getUsername())) {
+            conflicts.add("Username already exists.");
+        }
+        if (userRepository.existsByEmail(registerRequest.getEmail())) {
+            conflicts.add("Email already exists.");
+        }
+        if (!conflicts.isEmpty()) {
+            throw new SignupConflictException(conflicts);
+        }
+
         // save user information in database
         User user = new User();
         user.setUsername(registerRequest.getUsername());

@@ -18,9 +18,9 @@ import { CreatePostPayload } from "./create-post.payload";
 })
 export class CreatePostComponent {
   createPostForm = new FormGroup({
-    postName: new FormControl("", Validators.required),
+    postName: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     communityName: new FormControl("", Validators.required),
-    url: new FormControl("", Validators.required),
+    url: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     description: new FormControl("", Validators.required),
   });
   postPayload: CreatePostPayload = {
@@ -76,10 +76,11 @@ export class CreatePostComponent {
 
   createPost() {
     // Validate form fields before constructing payload.
-    const { postName, communityName, url, description } = this.createPostForm.value;
-    if (!postName || !communityName || !url || !description) {
+    if (this.createPostForm.invalid) {
+      this.createPostForm.markAllAsTouched();
       return;
     }
+    const { postName, communityName, url, description } = this.createPostForm.value;
 
     this.postPayload = {
       postName,

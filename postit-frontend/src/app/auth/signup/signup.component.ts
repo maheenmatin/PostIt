@@ -15,9 +15,9 @@ import { ToastrService } from "ngx-toastr";
 })
 export class SignupComponent {
   signupForm: FormGroup = new FormGroup({
-    username: new FormControl("", Validators.required),
-    email: new FormControl("", [Validators.required, Validators.email]),
-    password: new FormControl("", Validators.required),
+    username: new FormControl("", [Validators.required, Validators.maxLength(50)]),
+    email: new FormControl("", [Validators.required, Validators.email, Validators.maxLength(255)]),
+    password: new FormControl("", [Validators.required, Validators.maxLength(255)]),
   });
   signupRequestPayload: SignupRequestPayload;
 
@@ -31,6 +31,10 @@ export class SignupComponent {
 
   signup() {
     // Build payload from form values.
+    if (this.signupForm.invalid) {
+      this.signupForm.markAllAsTouched();
+      return;
+    }
     this.signupRequestPayload.email = this.signupForm.get("email")?.value;
     this.signupRequestPayload.username = this.signupForm.get("username")?.value;
     this.signupRequestPayload.password = this.signupForm.get("password")?.value;
@@ -41,18 +45,13 @@ export class SignupComponent {
         this.router.navigate(["/login"], { queryParams: { registered: "true" } });
       },
       error: (error) => {
-        // Attempt to detect duplicate username/email errors.
-        const backendMessage = (error?.error?.message || error?.error?.error || "").toString().toLowerCase();
-        const duplicateError =
-          error?.status === 409 ||
-          backendMessage.includes("exists") ||
-          backendMessage.includes("duplicate") ||
-          backendMessage.includes("unique");
-        this.toastr.error(
-          duplicateError
-            ? "Username or email already exists. Please try another."
-            : "Registration failed. Please try again."
-        );
+        const conflictErrors = Array.isArray(error?.error?.errors) ? error.error.errors : [];
+        if (conflictErrors.length > 0) {
+          conflictErrors.forEach((message: string) => this.toastr.error(message));
+          return;
+        }
+
+        this.toastr.error("Registration failed. Please try again.");
       },
     });
   }

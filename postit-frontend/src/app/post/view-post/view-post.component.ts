@@ -43,7 +43,7 @@ export class ViewPostComponent {
     this.postId = this.activateRoute.snapshot.params["id"];
 
     this.commentForm = new FormGroup({
-      text: new FormControl("", Validators.required),
+      text: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     });
     this.commentPayload = {
       text: "",
@@ -71,10 +71,11 @@ export class ViewPostComponent {
 
   postComment() {
     // Guard empty submissions and refresh list on success.
-    const { text } = this.commentForm.value;
-    if (!text) {
+    if (this.commentForm.invalid) {
+      this.commentForm.markAllAsTouched();
       return;
     }
+    const { text } = this.commentForm.value;
 
     this.commentPayload.text = text;
     this.commentService.postComment(this.commentPayload).subscribe({
