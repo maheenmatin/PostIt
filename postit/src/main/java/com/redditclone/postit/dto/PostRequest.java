@@ -13,6 +13,5 @@ public class PostRequest {
     private String communityName;
     @NotBlank(message = "Post name is required")
     private String postName;
-    private String url;
     private String description;
 }
