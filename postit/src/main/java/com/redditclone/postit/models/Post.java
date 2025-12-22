@@ -20,7 +20,7 @@ public class Post {
 
     private String url;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     private Integer voteCount = 0;

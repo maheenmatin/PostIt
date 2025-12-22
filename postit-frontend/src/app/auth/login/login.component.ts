@@ -31,8 +31,8 @@ export class LoginComponent {
       password: "",
     };
     this.loginForm = new FormGroup({
-      username: new FormControl("", Validators.required),
-      password: new FormControl("", Validators.required),
+      username: new FormControl("", [Validators.required, Validators.maxLength(50)]),
+      password: new FormControl("", [Validators.required, Validators.maxLength(255)]),
     });
   }
 

@@ -16,6 +16,7 @@
                 id="email_address"
                 class="form-control"
                 name="email-address"
+                maxlength="255"
                 required
                 autofocus
               />
@@ -26,7 +27,7 @@
 
             <div class="form-group">
               <label class="form-label">Username</label>
-              <input type="text" [formControlName]="'username'" class="form-control" required autofocus />
+              <input type="text" [formControlName]="'username'" class="form-control" maxlength="50" required autofocus />
               <span class="validation" *ngIf="!signupForm.get('username')?.valid && signupForm.get('username')?.touched">
                 Please provide a valid username
               </span>
@@ -40,6 +41,7 @@
                 id="password"
                 class="form-control"
                 name="password"
+                maxlength="255"
                 required
               />
               <span class="validation" *ngIf="!signupForm.get('password')?.valid && signupForm.get('password')?.touched">

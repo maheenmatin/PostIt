@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import static com.redditclone.postit.models.VoteType.DOWNVOTE;
 import static com.redditclone.postit.models.VoteType.UPVOTE;
 
 @Service
@@ -31,12 +32,24 @@ public class VoteService {
             throw new PostItException("You have already "
                     + voteDto.getVoteType() + "D this post");
         }
-        if (UPVOTE.equals(voteDto.getVoteType())) {
-            post.setVoteCount(post.getVoteCount() + 1);
+        int voteDelta;
+        if (voteByPostAndUser.isPresent()) {
+            Vote previousVote = voteByPostAndUser.get();
+            if (UPVOTE.equals(previousVote.getVoteType()) && DOWNVOTE.equals(voteDto.getVoteType())) {
+                voteDelta = -2;
+            } else if (DOWNVOTE.equals(previousVote.getVoteType()) && UPVOTE.equals(voteDto.getVoteType())) {
+                voteDelta = 2;
+            } else if (UPVOTE.equals(voteDto.getVoteType())) {
+                voteDelta = 1;
+            } else {
+                voteDelta = -1;
+            }
+        } else if (UPVOTE.equals(voteDto.getVoteType())) {
+            voteDelta = 1;
+        } else {
+            voteDelta = -1;
         }
-        else {
-            post.setVoteCount(post.getVoteCount() - 1);
-        }
+        post.setVoteCount(post.getVoteCount() + voteDelta);
         voteRepository.save(mapToVote(voteDto, post));
         postRepository.save(post);
     }
