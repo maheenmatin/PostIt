@@ -39,15 +39,18 @@ public class AuthService {
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
-        List<String> conflicts = new ArrayList<>();
+        List<String> conflictCodes = new ArrayList<>();
+        List<String> conflictMessages = new ArrayList<>();
         if (userRepository.existsByUsername(registerRequest.getUsername())) {
-            conflicts.add("Username already exists.");
+            conflictCodes.add("USERNAME_EXISTS");
+            conflictMessages.add("Username already exists.");
         }
         if (userRepository.existsByEmail(registerRequest.getEmail())) {
-            conflicts.add("Email already exists.");
+            conflictCodes.add("EMAIL_EXISTS");
+            conflictMessages.add("Email already exists.");
         }
-        if (!conflicts.isEmpty()) {
-            throw new SignupConflictException(conflicts);
+        if (!conflictCodes.isEmpty()) {
+            throw new SignupConflictException(conflictCodes, conflictMessages);
         }
 
         // save user information in database

@@ -14,6 +14,9 @@ public class RestExceptionHandler {
     @ExceptionHandler(SignupConflictException.class)
     public ResponseEntity<Map<String, Object>> handleSignupConflict(SignupConflictException exception) {
         return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(Map.of("errors", exception.getErrors()));
+                .body(Map.of(
+                        "errors", exception.getErrors(),
+                        "errorCodes", exception.getErrorCodes()
+                ));
     }
 }
