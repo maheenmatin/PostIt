@@ -27,7 +27,7 @@ class MailService {
             messageHelper.setFrom("postit@email.com");
             messageHelper.setTo(notificationEmail.getRecipient());
             messageHelper.setSubject(notificationEmail.getSubject());
-            messageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()));
+            messageHelper.setText(mailContentBuilder.build(notificationEmail.getBody()), true);
         };
         try {
             mailSender.send(messagePreparator);

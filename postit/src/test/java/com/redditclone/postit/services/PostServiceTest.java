@@ -48,7 +48,6 @@ class PostServiceTest {
         PostRequest request = new PostRequest();
         request.setCommunityName("java");
         request.setPostName("Hello");
-        request.setUrl("https://example.com");
         request.setDescription("Desc");
 
         Community community = new Community();
