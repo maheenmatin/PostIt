@@ -119,8 +119,8 @@ export class ViewPostComponent {
 
     return new Intl.DateTimeFormat("en-GB", {
       timeZone: "Europe/London",
-      dateStyle: "full",
-      timeStyle: "full",
+      dateStyle: "short",
+      timeStyle: "short",
     }).format(date);
   }
 

@@ -11,6 +11,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+
 import static org.springframework.http.HttpStatus.OK;
 
 @RestController
@@ -21,9 +24,9 @@ public class AuthController {
     private final RefreshTokenService refreshTokenService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Map<String, String>> signup(@RequestBody RegisterRequest registerRequest) {
         authService.signup(registerRequest);
-        return new ResponseEntity<>("User registration successful", OK);
+        return ResponseEntity.ok(Map.of("message", "User registration successful"));
     }
 
     @GetMapping("accountVerification/{token}")
