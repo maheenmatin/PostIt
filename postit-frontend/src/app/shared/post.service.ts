@@ -22,8 +22,8 @@ export class PostService {
   }
 
   // Create a new post within a community.
-  createPost(postPayload: CreatePostPayload): Observable<void> {
-    return this.http.post<void>(API_ENDPOINTS.posts, postPayload);
+  createPost(postPayload: CreatePostPayload): Observable<PostModel> {
+    return this.http.post<PostModel>(API_ENDPOINTS.posts, postPayload);
   }
 
   // Load a single post for the detail view.

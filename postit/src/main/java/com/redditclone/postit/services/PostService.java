@@ -30,10 +30,11 @@ public class PostService {
     private final AuthService authService;
     private final PostMapper postMapper;
 
-    public void savePost(PostRequest postRequest) {
+    public PostResponse savePost(PostRequest postRequest) {
         Community community = communityRepository.findByName(postRequest.getCommunityName())
                 .orElseThrow(() -> new CommunityNotFoundException(postRequest.getCommunityName()));
-        postRepository.save(postMapper.maptoPost(postRequest, community, authService.getCurrentUser()));
+        Post post = postRepository.save(postMapper.maptoPost(postRequest, community, authService.getCurrentUser()));
+        return postMapper.mapToDto(post);
     }
 
     @Transactional(readOnly = true)
