@@ -9,7 +9,7 @@ Full-stack web application mimicking core Reddit functionalities (user registrat
 - JWT Authentication
 - Swagger, Springdoc
 - Mapstruct, Postman, Mailtrap
-- MySQL
+- PostgreSQL
 
 ## Installation Requirements
 - Java 22 or above
@@ -26,7 +26,7 @@ Full-stack web application mimicking core Reddit functionalities (user registrat
 
 ## Screenshots
 
-![](Screenshots/1.png)
-![](Screenshots/2.png)
-![](Screenshots/3.png)
-![](Screenshots/4.png)
+![](screenshots/home.png)
+![](screenshots/comm.png)
+![](screenshots/signup.png)
+![](screenshots/create_comm.png)

@@ -1,0 +1,14 @@
+                                                          List of databases
+    Name    |    Owner     | Encoding | Locale Provider | Collate |  Ctype  | ICU Locale | ICU Rules |       Access privileges       
+------------+--------------+----------+-----------------+---------+---------+------------+-----------+-------------------------------
+ meeting_db | meeting_user | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =Tc/meeting_user             +
+            |              |          |                 |         |         |            |           | meeting_user=CTc/meeting_user
+ postgres   | postgres     | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | 
+ postit     | postit_user  | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =Tc/postit_user              +
+            |              |          |                 |         |         |            |           | postit_user=CTc/postit_user
+ template0  | postgres     | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres                  +
+            |              |          |                 |         |         |            |           | postgres=CTc/postgres
+ template1  | postgres     | UTF8     | libc            | C.UTF-8 | C.UTF-8 |            |           | =c/postgres                  +
+            |              |          |                 |         |         |            |           | postgres=CTc/postgres
+(5 rows)
+
