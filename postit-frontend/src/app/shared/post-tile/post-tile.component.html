@@ -37,6 +37,10 @@
     </div>
   </div>
   <div class="empty-state" *ngIf="postsFiltered.length === 0">
-    No posts yet!
+    <p>No posts yet!</p>
+
+  <div style="text-align: center">
+    <button class="btnCreatePost" (click)="goToCreatePost()">Create Post</button>
   </div>
+</div>
 </div>

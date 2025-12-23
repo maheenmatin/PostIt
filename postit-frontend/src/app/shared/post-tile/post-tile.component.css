@@ -80,6 +80,26 @@
   font-weight: 600;
 }
 
+.btnCreatePost {
+  background-color: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  fill: #2563eb;
+  border: 1px solid;
+  border-radius: 999px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  opacity: 1;
+  width: auto;
+  height: 36px;
+}
+
 @media (max-width: 768px) {
   .post {
     padding: 12px;

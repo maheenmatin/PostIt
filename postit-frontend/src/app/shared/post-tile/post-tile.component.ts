@@ -98,4 +98,8 @@ export class PostTileComponent implements OnInit, OnChanges {
     const normalized = Number(count) || 0;
     return `${normalized} ${normalized === 1 ? "comment" : "comments"}`;
   }
+
+  goToCreatePost() {
+    this.router.navigateByUrl("/create-post");
+  }
 }

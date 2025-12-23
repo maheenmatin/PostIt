@@ -32,7 +32,7 @@ export class CreateCommunityComponent {
     const communityModel: CommunityModel = { name, description };
 
     this.communityService.createCommunity(communityModel).subscribe({
-      next: () => this.router.navigateByUrl("/list-communities"),
+      next: (community) => this.router.navigate(["/community", community.communityId]),
       error: (error) => console.error("Error creating community", error),
     });
   }

@@ -100,9 +100,9 @@ export class CreatePostComponent {
     };
 
     this.postService.createPost(this.postPayload).subscribe({
-      next: () => {
-        // Return to the feed after successful creation.
-        this.router.navigateByUrl("/");
+      next: (post) => {
+        // Navigate to the newly created post after successful creation.
+        this.router.navigate(["/view-post", post.postId]);
       },
       error: (error) => console.error("Error creating post", error),
     });
