@@ -34,3 +34,4 @@ build/
 
 ## Private key
 src/main/resources/app.key
+secrets/
