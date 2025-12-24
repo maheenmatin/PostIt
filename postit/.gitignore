@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+## Private key
+src/main/resources/app.key
