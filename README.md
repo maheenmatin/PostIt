@@ -1,27 +1,29 @@
-# PostIt - Reddit Clone
+# PostIt - Social News Application
 
-Full-stack web application mimicking core Reddit functionalities (user registration, post creation and upvoting/downvoting)
+Live full-stack Reddit-style web app with users, communities, posts,
+comments and voting. 
 
-- Angular
-- Bootstrap
-- Spring Boot
-- Spring Security
-- JWT Authentication
-- Swagger, Springdoc
-- Mapstruct, Postman, Mailtrap
-- PostgreSQL
+## Live link
+[roompilot-app.com](https://roompilot-app.com)
+
+## Tech Stack
+- Angular, Bootstrap, Spring Boot, PostgreSQL
+- Spring Security, JWT authentication
+- Hibernate, Mapstruct, Mailtrap
+- JUnit, Mockito, Springdoc/OpenAPI
+- Render, Supabase, Flyway, GitHub Actions
 
 ## Installation Requirements
 - Java 22 or above
 
 ## Usage & Features
 - Authentication and authorisation (signup/login)
-- Create subreddits
+- Create communities
 - Create posts
 - Comment on posts
 - Vote on posts
 - View posts
-- View list of subreddits
+- View list of communities
 - View user profile (all of a user's posts and comments)
 
 ## Screenshots
@@ -30,3 +32,7 @@ Full-stack web application mimicking core Reddit functionalities (user registrat
 ![](screenshots/comm.png)
 ![](screenshots/signup.png)
 ![](screenshots/create_comm.png)
+
+## License
+
+All rights reserved
