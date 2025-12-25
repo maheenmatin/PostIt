@@ -18,8 +18,11 @@ export class AuthService {
   constructor(private httpClient: HttpClient, private localStorage: LocalStorageService, private router: Router) {}
 
   // Register a new account.
-  signup(payload: SignupRequestPayload): Observable<{ message: string }> {
-    return this.httpClient.post<{ message: string }>(`${API_ENDPOINTS.auth}/signup`, payload);
+  signup(payload: SignupRequestPayload): Observable<{ message: string; requiresEmailVerification: boolean }> {
+    return this.httpClient.post<{ message: string; requiresEmailVerification: boolean }>(
+      `${API_ENDPOINTS.auth}/signup`,
+      payload
+    );
   }
 
   // Authenticate and cache JWT/refresh tokens locally.

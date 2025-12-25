@@ -1,5 +1,6 @@
 package com.redditclone.postit.controllers;
 
+import com.redditclone.postit.configuration.AppMailConfig;
 import com.redditclone.postit.dto.AuthenticationResponse;
 import com.redditclone.postit.dto.LoginRequest;
 import com.redditclone.postit.dto.RefreshTokenRequest;
@@ -22,11 +23,15 @@ import static org.springframework.http.HttpStatus.OK;
 public class AuthController {
     private final AuthService authService;
     private final RefreshTokenService refreshTokenService;
+    private final AppMailConfig mailConfig;
 
     @PostMapping("/signup")
-    public ResponseEntity<Map<String, String>> signup(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Map<String, Object>> signup(@RequestBody RegisterRequest registerRequest) {
         authService.signup(registerRequest);
-        return ResponseEntity.ok(Map.of("message", "User registration successful"));
+        return ResponseEntity.ok(Map.of(
+                "message", "User registration successful",
+                "requiresEmailVerification", mailConfig.isEnabled()
+        ));
     }
 
     @GetMapping("accountVerification/{token}")

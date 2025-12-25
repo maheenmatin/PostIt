@@ -1,5 +1,6 @@
 package com.redditclone.postit.services;
 
+import com.redditclone.postit.configuration.AppMailConfig;
 import com.redditclone.postit.exceptions.PostItException.PostItException;
 import com.redditclone.postit.models.NotificationEmail;
 import lombok.AllArgsConstructor;
@@ -17,11 +18,16 @@ import org.springframework.stereotype.Service;
 class MailService {
     private final JavaMailSender mailSender;
     private final MailContentBuilder mailContentBuilder;
+    private final AppMailConfig mailConfig;
 
     // email is sent after database is queried+updated - this is expensive/time-consuming
     // call method asynchronously (new thread) to decrease response time
     @Async
     public void sendMail(NotificationEmail notificationEmail) {
+        if (!mailConfig.isEnabled()) {
+            log.info("Mail delivery disabled; skipping email to {}", notificationEmail.getRecipient());
+            return;
+        }
         MimeMessagePreparator messagePreparator = mimeMessage -> {
             MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
             messageHelper.setFrom("postit@email.com");

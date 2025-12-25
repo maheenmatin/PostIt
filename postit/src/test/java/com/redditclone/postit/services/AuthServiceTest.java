@@ -1,5 +1,6 @@
 package com.redditclone.postit.services;
 
+import com.redditclone.postit.configuration.AppMailConfig;
 import com.redditclone.postit.dto.AuthenticationResponse;
 import com.redditclone.postit.dto.LoginRequest;
 import com.redditclone.postit.dto.RefreshTokenRequest;
@@ -50,6 +51,9 @@ class AuthServiceTest {
     @Mock
     private RefreshTokenService refreshTokenService;
 
+    @Mock
+    private AppMailConfig mailConfig;
+
     @InjectMocks
     private AuthService authService;
 
@@ -67,6 +71,7 @@ class AuthServiceTest {
 
         // stub method behaviour
         when(passwordEncoder.encode("password")).thenReturn("encoded");
+        when(mailConfig.isEnabled()).thenReturn(true);
         when(verificationTokenService.generateVerificationToken(any(User.class)))
                 .thenReturn("verification-token");
 

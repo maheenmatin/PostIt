@@ -40,8 +40,10 @@ export class LoginComponent {
     // Display activation notice after signup redirect.
     this.activatedRoute.queryParams.subscribe((params) => {
       if (params["registered"] !== undefined && params["registered"] === "true") {
-        this.registerSuccessMessage =
-          "Signup successful. An activation email has been sent - please activate your account before you login!";
+        const requiresVerification = params["requiresEmailVerification"] === "true";
+        this.registerSuccessMessage = requiresVerification
+          ? "Signup successful. An activation email has been sent - please activate your account before you login!"
+          : "Signup successful. You can now log in with your new account.";
       }
     });
   }

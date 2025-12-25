@@ -40,9 +40,14 @@ export class SignupComponent {
     this.signupRequestPayload.password = this.signupForm.get("password")?.value;
 
     this.authService.signup(this.signupRequestPayload).subscribe({
-      next: () => {
+      next: (response) => {
         // Redirect to login with a query param for the success banner.
-        this.router.navigate(["/login"], { queryParams: { registered: "true" } });
+        this.router.navigate(["/login"], {
+          queryParams: {
+            registered: "true",
+            requiresEmailVerification: response.requiresEmailVerification ? "true" : "false",
+          },
+        });
       },
       error: (error) => {
         const conflictErrors = Array.isArray(error?.error?.errors) ? error.error.errors : [];

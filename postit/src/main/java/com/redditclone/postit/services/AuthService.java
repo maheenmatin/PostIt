@@ -1,5 +1,6 @@
 package com.redditclone.postit.services;
 
+import com.redditclone.postit.configuration.AppMailConfig;
 import com.redditclone.postit.dto.AuthenticationResponse;
 import com.redditclone.postit.dto.LoginRequest;
 import com.redditclone.postit.dto.RefreshTokenRequest;
@@ -36,6 +37,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
+    private final AppMailConfig mailConfig;
 
     @Transactional
     public void signup(RegisterRequest registerRequest) {
@@ -59,15 +61,18 @@ public class AuthService {
         user.setEmail(registerRequest.getEmail());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setCreatedDate(Instant.now());
-        user.setEnabled(false);
+        boolean mailEnabled = mailConfig.isEnabled();
+        user.setEnabled(!mailEnabled);
         userRepository.save(user);
 
-        // send email with verification token
-        String token = verificationTokenService.generateVerificationToken(user);
-        mailService.sendMail(new NotificationEmail("Activate your PostIt account",
-                user.getEmail(), "Thank you for signing up to PostIt. " +
-                "Please click on the following link to activate your account: " +
-                "http://localhost:8080/api/auth/accountVerification/" + token));
+        if (mailEnabled) {
+            // send email with verification token
+            String token = verificationTokenService.generateVerificationToken(user);
+            mailService.sendMail(new NotificationEmail("Activate your PostIt account",
+                    user.getEmail(), "Thank you for signing up to PostIt. " +
+                    "Please click on the following link to activate your account: " +
+                    "http://localhost:8080/api/auth/accountVerification/" + token));
+        }
     }
 
     @Transactional
