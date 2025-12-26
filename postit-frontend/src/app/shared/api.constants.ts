@@ -1,7 +1,7 @@
-// Centralized API base URL to avoid scattered hard-coded strings.
-export const API_BASE_URL = 'http://localhost:8080';
+import { environment } from '../../environments/environment';
 
-// Service endpoints grouped by functional area.
+export const API_BASE_URL = environment.apiBaseUrl;
+
 export const API_ENDPOINTS = {
   auth: `${API_BASE_URL}/api/auth`,
   comments: `${API_BASE_URL}/api/comments`,
