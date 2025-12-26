@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
-  apiBaseUrl: 'http://localhost:8080',
+  production: true,
+  apiBaseUrl: 'https://postit-x5e6.onrender.com',
 };
